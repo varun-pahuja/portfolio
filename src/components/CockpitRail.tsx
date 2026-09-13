@@ -24,26 +24,39 @@ export default function CockpitRail() {
 
   useEffect(() => {
     let ticking = false;
+    let lastProgress = -1;
+    let lastSector = "";
 
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const docHeight = document.documentElement.scrollHeight - window.innerHeight;
           const currentProgress = docHeight > 0 ? Math.round((window.scrollY / docHeight) * 100) : 0;
-          setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
+          const boundedProgress = Math.min(100, Math.max(0, currentProgress));
+
+          if (Math.abs(boundedProgress - lastProgress) >= 2 || boundedProgress === 0 || boundedProgress === 100) {
+            lastProgress = boundedProgress;
+            setScrollProgress(boundedProgress);
+          }
 
           // Determine active sector
+          let foundSector = "";
           for (let i = SECTORS.length - 1; i >= 0; i--) {
             const sector = SECTORS[i];
             const el = document.getElementById(sector.id);
             if (el) {
               const rect = el.getBoundingClientRect();
               if (rect.top <= window.innerHeight * 0.4) {
-                setActiveSector(sector.id);
+                foundSector = sector.id;
                 break;
               }
             }
           }
+          if (foundSector && foundSector !== lastSector) {
+            lastSector = foundSector;
+            setActiveSector(foundSector);
+          }
+
           ticking = false;
         });
         ticking = true;

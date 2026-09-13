@@ -28,16 +28,36 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
   };
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+    let ticking = false;
+    let lastScrolled = false;
+    let lastSection = "";
 
-      const sections = ["about", "projects", "experience", "contact"];
-      for (const id of sections.reverse()) {
-        const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= 200) {
-          setActiveSection(id);
-          break;
-        }
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const isPast50 = window.scrollY > 50;
+          if (isPast50 !== lastScrolled) {
+            lastScrolled = isPast50;
+            setScrolled(isPast50);
+          }
+
+          const sections = ["about", "projects", "experience", "contact"];
+          let foundSection = "";
+          for (let i = sections.length - 1; i >= 0; i--) {
+            const el = document.getElementById(sections[i]);
+            if (el && el.getBoundingClientRect().top <= 200) {
+              foundSection = sections[i];
+              break;
+            }
+          }
+          if (foundSection !== lastSection) {
+            lastSection = foundSection;
+            setActiveSection(foundSection);
+          }
+
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

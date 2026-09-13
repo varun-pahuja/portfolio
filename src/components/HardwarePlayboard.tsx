@@ -84,16 +84,23 @@ function LogicAnalyzer({
   running,
   speed,
   manualOn,
+  inView = true,
 }: {
   running: boolean;
   speed: number;
   manualOn: boolean[];
+  inView?: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const timeRef = useRef<number>(0);
 
   useEffect(() => {
+    if (!inView) {
+      cancelAnimationFrame(animRef.current);
+      return;
+    }
+
     const cv = canvasRef.current;
     if (!cv) return;
     const ctx = cv.getContext("2d");
@@ -188,7 +195,7 @@ function LogicAnalyzer({
 
     animRef.current = requestAnimationFrame(render);
     return () => cancelAnimationFrame(animRef.current);
-  }, [running, speed, manualOn]);
+  }, [running, speed, manualOn, inView]);
 
   return (
     <div className="flex flex-col gap-1 p-2 rounded-lg bg-black/60 border border-[var(--border-dim)] font-mono text-[10px]">
@@ -959,11 +966,32 @@ export default function HardwarePlayboard() {
     e.preventDefault();
   }, []);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [boardInView, setBoardInView] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setBoardInView(entry.isIntersecting);
+      },
+      { rootMargin: "150px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   if (!canRun) return null;
 
   return (
     <BoardBoundary>
-      <div className="relative rounded-2xl border border-[var(--border-dim)] overflow-hidden bg-[#0a0a14] max-h-[560px]">
+      <div
+        ref={containerRef}
+        className="relative rounded-2xl border border-[var(--border-dim)] overflow-hidden bg-[#0a0a14] max-h-[560px]"
+      >
         {/* side simulation panel */}
         <div
           className="absolute left-0 top-0 bottom-0 w-[220px] z-10 hidden sm:flex flex-col gap-2.5 p-3 bg-[#0d0d18]/90 border-r border-[var(--border-dim)] backdrop-blur-sm overflow-y-auto"
@@ -1071,7 +1099,12 @@ export default function HardwarePlayboard() {
           </div>
 
           {/* Real-time Logic Analyzer Waveform Stream */}
-          <LogicAnalyzer running={running} speed={speed} manualOn={manualOn} />
+          <LogicAnalyzer
+            running={running}
+            speed={speed}
+            manualOn={manualOn}
+            inView={boardInView}
+          />
 
           <div className="mt-auto pt-1.5 border-t border-[var(--border-dim)] flex flex-col gap-1">
             <div className="text-[10px] text-[var(--text-stone)] flex justify-between">
@@ -1104,22 +1137,31 @@ export default function HardwarePlayboard() {
           onContextMenu={onContextMenu}
         >
           <Canvas
+            frameloop={boardInView ? "always" : "never"}
             camera={{ position: [4.6, 5.2, 6.4], fov: 35 }}
-            dpr={[1, 1.5]}
-            gl={{ antialias: true, alpha: false, failIfMajorPerformanceCaveat: false }}
+            dpr={[1, 1.25]}
+            gl={{
+              powerPreference: "high-performance",
+              antialias: false,
+              alpha: false,
+              stencil: false,
+              failIfMajorPerformanceCaveat: false,
+            }}
             onPointerMissed={() => setSelected(null)}
           >
-            <CircuitScene
-              running={running}
-              speed={speed}
-              manualOn={manualOn}
-              selected={selected}
-              setSelected={setSelected}
-              hoverId={hoverId}
-              setHoverId={setHoverId}
-              ctl={ctl}
-              isBlueprint={isBlueprint}
-            />
+            {boardInView && (
+              <CircuitScene
+                running={running}
+                speed={speed}
+                manualOn={manualOn}
+                selected={selected}
+                setSelected={setSelected}
+                hoverId={hoverId}
+                setHoverId={setHoverId}
+                ctl={ctl}
+                isBlueprint={isBlueprint}
+              />
+            )}
           </Canvas>
 
           {/* Top canvas instruction hint */}

@@ -313,9 +313,26 @@ function HeroScene() {
   );
 }
 
-/* ─── Smart wrapper: only render 3D when supported + desktop + motion allowed ─── */
+/* ─── Smart wrapper: only render 3D when visible in viewport + desktop + motion allowed ─── */
 export default function HeroCanvas() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(true);
   const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+      },
+      { rootMargin: "100px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const canRun = useMemo(() => {
     if (reduced) return false;
@@ -329,14 +346,22 @@ export default function HeroCanvas() {
 
   return (
     <SceneBoundary>
-      <div className="absolute inset-0 z-0" style={{ pointerEvents: "none" }} aria-hidden="true">
+      <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
         <Canvas
+          frameloop={inView ? "always" : "never"}
           camera={{ position: [0, 0, 6], fov: 50 }}
-          dpr={[1, 1.5]}
-          gl={{ antialias: true, alpha: true, failIfMajorPerformanceCaveat: false }}
+          dpr={[1, 1.25]}
+          gl={{
+            powerPreference: "high-performance",
+            antialias: false,
+            alpha: true,
+            stencil: false,
+            depth: true,
+            failIfMajorPerformanceCaveat: false,
+          }}
           style={{ background: "transparent" }}
         >
-          <HeroScene />
+          {inView && <HeroScene />}
         </Canvas>
       </div>
     </SceneBoundary>

@@ -27,9 +27,9 @@
 @theme inline {
   --color-background: var(--bg-void);
   --color-foreground: var(--text-washi);
-  --font-sans: 'Clash Display', 'Geist', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-body: 'Geist', system-ui, sans-serif;
+  --font-sans: 'Clash Display', var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), var(--font-geist-mono), 'JetBrains Mono', monospace;
+  --font-body: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 * {
