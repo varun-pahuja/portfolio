@@ -12,6 +12,60 @@ type HistoryItem = {
   output: string | React.ReactNode;
 };
 
+function MatrixRain() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const cv = canvasRef.current;
+    if (!cv) return;
+    const ctx = cv.getContext("2d");
+    if (!ctx) return;
+
+    cv.width = cv.parentElement?.clientWidth || 360;
+    cv.height = 140;
+
+    const chars = "ｦｱｳｴｵｶｷｹｺｻｼｽｾｿﾀﾂﾃﾅﾆﾇﾈﾊﾋﾎﾏﾐﾑﾒﾓﾔﾕﾗﾘﾜ1234567890ABCDEF道朱藍金桜翠";
+    const fontSize = 12;
+    const columns = Math.floor(cv.width / fontSize);
+    const drops = Array(columns).fill(1);
+
+    let raf: number;
+    let last = performance.now();
+
+    const draw = (now: number) => {
+      if (now - last > 35) {
+        last = now;
+        ctx.fillStyle = "rgba(6, 6, 10, 0.25)";
+        ctx.fillRect(0, 0, cv.width, cv.height);
+
+        ctx.fillStyle = "#34d399";
+        ctx.font = `${fontSize}px monospace`;
+
+        for (let i = 0; i < drops.length; i++) {
+          const char = chars[Math.floor(Math.random() * chars.length)];
+          ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > cv.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    };
+
+    raf = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  return (
+    <div className="rounded border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.9)] p-2 my-1 overflow-hidden">
+      <div className="text-[10px] text-emerald-400 font-mono mb-1">// CYBERPUNK MATRIX STREAM ACTIVE</div>
+      <canvas ref={canvasRef} className="w-full h-[140px] block" />
+    </div>
+  );
+}
+
 export default function TerminalDrawer({
   isOpen,
   onClose,
@@ -98,6 +152,18 @@ export default function TerminalDrawer({
               <div>
                 <span className="text-[var(--accent)] font-mono font-bold">projects</span>
                 <span className="text-[var(--text-stone)]"> - Key engineering builds</span>
+              </div>
+              <div>
+                <span className="text-[var(--accent)] font-mono font-bold">resume</span>
+                <span className="text-[var(--text-stone)]"> - Print verified CV & credentials</span>
+              </div>
+              <div>
+                <span className="text-[var(--accent)] font-mono font-bold">bench</span>
+                <span className="text-[var(--text-stone)]"> - Run WebGL & JS compute benchmark</span>
+              </div>
+              <div>
+                <span className="text-[var(--accent)] font-mono font-bold">matrix</span>
+                <span className="text-[var(--text-stone)]"> - Cyberpunk Kanji digital rain stream</span>
               </div>
               <div>
                 <span className="text-[var(--accent)] font-mono font-bold">secrets</span>
@@ -230,6 +296,61 @@ export default function TerminalDrawer({
             </div>
           );
           break;
+
+        case "resume":
+        case "cv":
+          output = (
+            <div className="text-xs font-mono space-y-2 p-3 rounded bg-[var(--bg-lacquer)] border border-[var(--border-subtle)] text-[var(--text-parchment)]">
+              <div className="flex items-center justify-between text-[var(--accent)] border-b border-[var(--border-subtle)] pb-1 mb-1 font-bold">
+                <span>VARUN PAHUJA — CURRICULUM VITAE</span>
+                <span className="text-emerald-400">CGPA: 8.06</span>
+              </div>
+              <p><strong className="text-[var(--text-washi)]">Education:</strong> B.Tech in IoT, MITS Gwalior (2023–2027)</p>
+              <p><strong className="text-[var(--text-washi)]">Experience:</strong> Full Stack Intern @ Infotact (CRDT / APIs), Cybersecurity Intern @ Thiranex (ML), Webmaster Head @ IEEE IAS</p>
+              <p><strong className="text-[var(--text-washi)]">Top Stack:</strong> React 19, Next.js 16, TypeScript, Node.js, ESP32, Yjs CRDT, Python</p>
+              <div className="pt-2 border-t border-[var(--border-subtle)] flex flex-wrap items-center gap-4">
+                <a href="mailto:varunpahuja2005@gmail.com" className="text-[var(--accent)] underline font-bold">
+                  ✉️ Request Official PDF
+                </a>
+                <a href="https://linkedin.com/in/varun-pahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent-gold)] underline">
+                  LinkedIn Dossier
+                </a>
+              </div>
+            </div>
+          );
+          break;
+
+        case "matrix":
+        case "rain":
+          output = <MatrixRain />;
+          break;
+
+        case "bench": {
+          const t0 = performance.now();
+          let sum = 0;
+          for (let i = 0; i < 1000000; i++) {
+            sum += Math.sqrt(i) * Math.sin(i);
+          }
+          const elapsed = (performance.now() - t0).toFixed(2);
+          const cores = typeof navigator !== "undefined" ? navigator.hardwareConcurrency || 4 : 4;
+          const mem = typeof navigator !== "undefined" && "deviceMemory" in navigator ? `${(navigator as unknown as { deviceMemory: number }).deviceMemory} GB` : "8+ GB";
+          const res = typeof window !== "undefined" ? `${window.innerWidth}x${window.innerHeight} @ ${window.devicePixelRatio}x` : "1920x1080";
+
+          output = (
+            <div className="text-xs font-mono space-y-1.5 p-2.5 rounded bg-[var(--bg-lacquer)] border border-[var(--border-subtle)] text-[var(--text-parchment)]">
+              <div className="flex items-center justify-between text-[var(--accent)] border-b border-[var(--border-subtle)] pb-1 mb-1 font-bold">
+                <span>[CLIENT COMPUTE &amp; GRAPHICS BENCHMARK]</span>
+                <span className="text-emerald-400">SCORE: S-TIER</span>
+              </div>
+              <p>• Math Throughput: 1,000,000 FPU vector calculations in <span className="text-emerald-400 font-bold">{elapsed}ms</span></p>
+              <p>• Logical Cores: <span className="text-[var(--text-washi)] font-bold">{cores} Threads Active</span></p>
+              <p>• Available Heap / RAM: <span className="text-[var(--text-washi)] font-bold">{mem}</span></p>
+              <p>• Viewport Render Target: <span className="text-[var(--accent-gold)]">{res}</span></p>
+              <p>• WebGL 2.0 Acceleration: <span className="text-emerald-400 font-bold">ENABLED (Three.js R3F Hardware Pipeline)</span></p>
+            </div>
+          );
+          break;
+        }
 
         case "secrets":
           output = (

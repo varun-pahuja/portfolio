@@ -1,8 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, FileText } from "lucide-react";
 import dynamic from "next/dynamic";
+import ResumeModal from "./ResumeModal";
+import GitHubTelemetry from "./GitHubTelemetry";
+import { playSound } from "@/lib/audio";
 
 const HeroCanvas = dynamic(() => import("./HeroCanvas"), {
   ssr: false,
@@ -10,6 +14,7 @@ const HeroCanvas = dynamic(() => import("./HeroCanvas"), {
 });
 
 export default function Hero() {
+  const [resumeOpen, setResumeOpen] = useState(false);
   return (
     <section
       id="home"
@@ -96,20 +101,44 @@ export default function Hero() {
         >
           <a
             href="#projects"
+            onClick={() => playSound("click")}
             className="group relative inline-flex items-center gap-2 px-6 py-3 bg-[var(--accent-vermillion)] text-white text-sm font-semibold rounded-lg overflow-hidden transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--accent-rgb),0.3)]"
           >
             <span className="relative z-10">View Projects</span>
             <ArrowDown className="relative z-10 w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
             <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent-vermillion)] to-[var(--accent-vermillion-glow)] opacity-0 group-hover:opacity-100 transition-opacity" />
           </a>
+          <button
+            onClick={() => {
+              playSound("switch");
+              setResumeOpen(true);
+            }}
+            className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--border-dim)] bg-[var(--bg-lacquer)]/60 text-[var(--text-parchment)] text-sm font-medium rounded-lg hover:border-[var(--accent-vermillion)]/60 hover:text-[var(--text-washi)] transition-all duration-300 cursor-pointer"
+          >
+            <FileText className="w-4 h-4 text-[var(--accent-vermillion)]" />
+            <span>Dossier / CV</span>
+          </button>
           <a
             href="#contact"
+            onClick={() => playSound("click")}
             className="inline-flex items-center gap-2 px-6 py-3 border border-[var(--border-dim)] text-[var(--text-parchment)] text-sm font-medium rounded-lg hover:border-[var(--text-stone)] hover:text-[var(--text-washi)] transition-all duration-300"
           >
             Get in Touch
           </a>
         </motion.div>
+
+        {/* Live GitHub Telemetry Ticker */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.95 }}
+          className="mt-8 flex justify-center"
+        >
+          <GitHubTelemetry />
+        </motion.div>
       </div>
+
+      <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
 
       {/* Scroll indicator */}
       <motion.div

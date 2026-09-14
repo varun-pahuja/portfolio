@@ -1,10 +1,12 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { ExternalLink } from "lucide-react";
+import { useState, useRef } from "react";
+import { ExternalLink, Layers } from "lucide-react";
 import dynamic from "next/dynamic";
 import SectionHeading from "./SectionHeading";
+import CaseStudyModal from "./CaseStudyModal";
+import { playSound } from "@/lib/audio";
 
 const HardwarePlayboard = dynamic(() => import("./HardwarePlayboard"), {
   ssr: false,
@@ -22,6 +24,7 @@ function GithubIcon({ className }: { className?: string }) {
 export default function FeaturedProject() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [caseStudyOpen, setCaseStudyOpen] = useState(false);
 
   return (
     <section id="projects" className="relative py-24 md:py-32 px-6 md:px-8 bg-[rgba(12,12,20,0.93)]">
@@ -133,22 +136,32 @@ export default function FeaturedProject() {
                 href="https://github.com/varun-pahuja/air-mouse"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => playSound("click")}
                 className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-[var(--accent-vermillion)] text-white hover:shadow-[0_0_20px_rgba(var(--accent-rgb),0.3)] transition-all duration-300"
               >
                 <GithubIcon className="w-4 h-4" />
                 Source Code
               </a>
-              <a
-                href="#"
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[var(--border-dim)] text-[var(--text-parchment)] hover:border-[var(--text-stone)] hover:text-[var(--text-washi)] transition-all duration-300"
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  setCaseStudyOpen(true);
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[var(--border-dim)] text-[var(--text-parchment)] hover:border-[var(--accent-vermillion)]/50 hover:text-[var(--text-washi)] transition-all duration-300 cursor-pointer"
               >
-                <ExternalLink className="w-4 h-4" />
-                Case Study
-              </a>
+                <Layers className="w-4 h-4 text-[var(--accent-vermillion)]" />
+                Inspect Architecture
+              </button>
             </motion.div>
           </div>
         </div>
       </div>
+
+      <CaseStudyModal
+        isOpen={caseStudyOpen}
+        studyId="airmouse"
+        onClose={() => setCaseStudyOpen(false)}
+      />
     </section>
   );
 }

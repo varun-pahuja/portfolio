@@ -13,6 +13,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { playSound } from "@/lib/audio";
+import CaseStudyModal from "./CaseStudyModal";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -110,6 +111,7 @@ export default function ProjectsGrid() {
 
   // Interactive State: SyncDoc CRDT
   const [crdtStep, setCrdtStep] = useState(0);
+  const [crdtModalOpen, setCrdtModalOpen] = useState(false);
 
   // Interactive State: NASA RAG
   const [selectedNasaIdx, setSelectedNasaIdx] = useState(0);
@@ -296,7 +298,7 @@ export default function ProjectsGrid() {
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
               <a
                 href="https://github.com/varun-pahuja/infotact-project2"
                 target="_blank"
@@ -307,6 +309,16 @@ export default function ProjectsGrid() {
                 <GithubIcon className="w-4 h-4" />
                 Inspect Repository
               </a>
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  setCrdtModalOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-vermillion)] hover:underline cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                Inspect CRDT Architecture
+              </button>
             </div>
           </motion.article>
 
@@ -537,6 +549,12 @@ export default function ProjectsGrid() {
           </motion.article>
         </div>
       </div>
+
+      <CaseStudyModal
+        isOpen={crdtModalOpen}
+        studyId="syncdoc"
+        onClose={() => setCrdtModalOpen(false)}
+      />
     </section>
   );
 }

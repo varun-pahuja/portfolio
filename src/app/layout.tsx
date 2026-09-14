@@ -53,6 +53,33 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Varun Pahuja",
+  url: "https://varun-pahuja.github.io/portfolio",
+  jobTitle: "Full-Stack Developer & IoT Engineer",
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Madhav Institute of Technology and Science, Gwalior",
+  },
+  sameAs: [
+    "https://github.com/varun-pahuja",
+    "https://www.linkedin.com/in/varun-pahuja475/",
+  ],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "Node.js",
+    "CRDT",
+    "Internet of Things",
+    "ESP32",
+    "Distributed Systems",
+    "Machine Learning",
+  ],
+};
+
 export default function RootLayout({
   children,
 }: LayoutProps<"/">) {
@@ -64,6 +91,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400;500;600;700&display=swap" rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body className="noise-overlay min-h-full flex flex-col">
         <a href="#main-content" className="skip-link">

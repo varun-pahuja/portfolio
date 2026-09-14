@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, Terminal as TerminalIcon } from "lucide-react";
+import { Volume2, VolumeX, Terminal as TerminalIcon, FileText } from "lucide-react";
 import { playSound, setSoundEnabled, getInitialSoundState } from "@/lib/audio";
+import ResumeModal from "./ResumeModal";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -17,6 +18,7 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(() => getInitialSoundState());
+  const [resumeOpen, setResumeOpen] = useState(false);
 
   const toggleSound = () => {
     const next = !soundOn;
@@ -144,6 +146,20 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
             <span className="hidden sm:inline font-mono text-[10px] tracking-wider">CLI</span>
           </button>
 
+          {/* Resume CV trigger */}
+          <button
+            onClick={() => {
+              playSound("switch");
+              setResumeOpen(true);
+            }}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-[var(--border-dim)] bg-[var(--bg-lacquer)]/50 text-xs text-[var(--text-stone)] hover:text-[var(--accent-vermillion)] hover:border-[var(--accent-vermillion)]/40 transition-all active:scale-95 cursor-pointer"
+            title="View Verified Resume / CV"
+            aria-label="Open Resume Dossier"
+          >
+            <FileText className="w-3.5 h-3.5 text-[var(--accent-vermillion)]" />
+            <span className="hidden sm:inline font-mono text-[10px] tracking-wider">CV</span>
+          </button>
+
           {/* Status badge */}
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-dim)] bg-[var(--bg-lacquer)]/50">
             <span className="relative flex h-2 w-2">
@@ -207,6 +223,17 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
                   {link.label}
                 </motion.a>
               ))}
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  setMobileOpen(false);
+                  setResumeOpen(true);
+                }}
+                className="py-3 text-lg font-medium text-[var(--accent-vermillion)] text-left flex items-center gap-2 border-b border-[var(--border-subtle)]"
+              >
+                <FileText className="w-4 h-4" />
+                <span>View Resume / CV</span>
+              </button>
               <div className="flex items-center gap-2 mt-4">
                 <span className="relative flex h-2 w-2">
                   <span className="pulse-dot absolute inline-flex h-full w-full rounded-full bg-[var(--accent-vermillion)] opacity-75" />
@@ -220,6 +247,8 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
     </motion.header>
   );
 }

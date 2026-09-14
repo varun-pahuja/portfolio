@@ -53,11 +53,15 @@ Engineered with **Next.js 16 (Turbopack)**, **React 19**, and **Three.js / React
   - **Gold (金)** — `#c9a84c`
   - **Sakura (桜)** — `#e879a8`
   - **Jade (翠)** — `#2dd4a8`
-- **🎮 Interactive Terminal Drawer:** Press <kbd>`</kbd> or <kbd>~</kbd> (or toggle via navigation) to summon an integrated terminal with commands like `whoami`, `skills`, `iot`, `projects`, `theme <id>`, `contact`, and `clear`.
+- **🎮 Interactive Terminal Drawer:** Press <kbd>`</kbd> or <kbd>~</kbd> (or toggle via navigation) to summon an integrated terminal with commands like `whoami`, `skills`, `iot`, `projects`, `resume`, `bench`, `matrix`, `secrets`, `theme <id>`, `contact`, and `clear`.
+- **📐 Interactive Architecture Inspectors:** Deep-dive case study drawers for *Air Mouse AI* and *SyncDoc* showcasing hardware constraints, data pipelines, engineering trade-offs, and verified benchmarks.
+- **📡 Real-Time GitHub Telemetry:** Live streaming ticker pulling verified public commit activity for `varun-pahuja` via the GitHub API.
+- **📄 Verified Resume Dossier:** Interactive CV modal accessible via the navbar `CV` trigger, hero CTA, or CLI `resume` command.
+- **📬 Direct Transmission Console:** Tactical client-side comms terminal with subject protocols, character telemetry, and audio packet dispatch.
 - **🔊 Procedural Web Audio SFX:** 100% synthetic sound design generated via the Web Audio API without audio assets (clicks, relays, terminal typing, switches, and boot tones).
 - **🕹️ Easter Eggs:**
-  - Enter the legendary **Konami Code** (<kbd>↑</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>B</kbd> <kbd>A</kbd>) to trigger an anime-style cyberpunk opening overlay.
-  - Interactive Yin-Yang particle dispersion canvas animation.
+  - Live Konami keycap tracker in the footer (<kbd>↑</kbd> <kbd>↑</kbd> <kbd>↓</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>←</kbd> <kbd>→</kbd> <kbd>B</kbd> <kbd>A</kbd>) with real-time key glow and click-to-launch trigger.
+  - Interactive Yin-Yang particle dispersion canvas animation (`道 — the way`).
 - **🛰️ Cockpit Telemetry Rail:** Persistent vertical HUD side-rail tracking real-time sector progression (`00 HOME`, `01 BIO`, `02 CAD`, `03 BENTO`, `04 LOGS`, `05 COMMS`) with live scroll percentage telemetry.
 
 ---
