@@ -57,16 +57,16 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-xl">
+      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-xl dossier-modal-overlay print-container">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 15 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl bg-[#09090e] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden my-6 text-left"
+          className="relative w-full max-w-4xl bg-[#09090e] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden my-6 text-left dossier-card"
         >
-          {/* Top Tactical Status Bar */}
-          <div className="flex items-center justify-between px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/70">
+          {/* Top Tactical Status Bar (Hidden in Print) */}
+          <div className="flex items-center justify-between px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/70 no-print">
             <div className="flex items-center gap-2.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-xs font-mono font-bold text-[var(--accent-vermillion)] uppercase tracking-wider">
@@ -98,9 +98,9 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
             </div>
           </div>
 
-          <div className="p-6 md:p-8 space-y-7 max-h-[85vh] overflow-y-auto font-sans">
+          <div className="p-6 md:p-8 space-y-6 max-h-[85vh] overflow-y-auto font-sans dossier-scroll-area">
             {/* Header: Candidate Identity & Direct Actions */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[var(--border-subtle)]">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[var(--border-subtle)] dossier-section">
               <div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-2xl md:text-3xl font-bold text-[var(--text-washi)] tracking-tight">
@@ -119,7 +119,7 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
               </div>
 
               {/* Fast Action Buttons */}
-              <div className="flex flex-wrap items-center gap-2.5">
+              <div className="flex flex-wrap items-center gap-2.5 no-print">
                 <a
                   href="/Resume.pdf"
                   download="Varun_Pahuja_Resume.pdf"
@@ -364,8 +364,14 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
               </div>
             </div>
 
-            {/* Bottom Actions Footer */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[var(--border-subtle)]">
+            {/* Print-only footer */}
+            <div className="hidden print:flex items-center justify-between pt-3 border-t border-gray-300 text-[10px] font-mono text-gray-700">
+              <span>Varun Pahuja • varunpahuja2005@gmail.com • +91 7415710476</span>
+              <span>Generated from varun-pahuja.github.io/portfolio</span>
+            </div>
+
+            {/* Bottom Actions Footer (Screen only) */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-[var(--border-subtle)] no-print">
               <div className="text-xs text-[var(--text-stone)] font-mono">
                 Direct inquiry:{" "}
                 <a

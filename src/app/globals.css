@@ -195,3 +195,115 @@ a {
   55%  { opacity: 0.5; transform: translate(-1px, 1px); }
   100% { opacity: 0; transform: translate(0, 0); }
 }
+
+/* ==========================================================================
+   PRINT STYLES: Executive Dossier Print Optimization
+   Prevents whole-page duplication; outputs clean, professional 1-2 page dossier.
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm;
+  }
+
+  /* Reset document root */
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 10.5pt !important;
+    line-height: 1.35 !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Hide entire background website and decorative UI */
+  #main-content,
+  header,
+  nav,
+  footer,
+  aside,
+  canvas,
+  .noise-overlay::before,
+  .skip-link,
+  .no-print {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Ensure the dossier container expands normally without fixed viewport lock */
+  .dossier-modal-overlay {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    inset: auto !important;
+  }
+
+  .dossier-card {
+    position: static !important;
+    background: #ffffff !important;
+    color: #111827 !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+
+  .dossier-scroll-area {
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  /* High-contrast ink-saving monochrome print typography */
+  .dossier-card * {
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  .dossier-card h1,
+  .dossier-card h2,
+  .dossier-card h3 {
+    color: #000000 !important;
+    font-weight: 700 !important;
+  }
+
+  .dossier-card p,
+  .dossier-card span,
+  .dossier-card div {
+    color: #1f2937 !important;
+  }
+
+  .dossier-card [class*="text-[var(--accent"] {
+    color: #991b1b !important; /* Deep crimson accent in print */
+  }
+
+  /* Metric cards & borders */
+  .dossier-card .border,
+  .dossier-card [class*="border-"] {
+    border-color: #d1d5db !important;
+    background: #f9fafb !important;
+  }
+
+  /* Prevent page breaks inside cards */
+  .dossier-section,
+  .dossier-card .grid > div {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 8px !important;
+  }
+}
+
