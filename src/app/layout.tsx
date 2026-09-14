@@ -22,8 +22,23 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+const getBaseUrl = () => {
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  return "https://varun-pahuja.github.io/portfolio";
+};
+
+const baseUrl = getBaseUrl();
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://varun-pahuja.github.io/portfolio"),
+  metadataBase: new URL(baseUrl),
   title: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
   description:
     "I build systems where web meets hardware. Full-stack developer and IoT engineer specializing in React, Next.js, Node.js, and embedded systems.",
@@ -42,7 +57,7 @@ export const metadata: Metadata = {
     title: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
     description:
       "I build systems where web meets hardware. Full-stack developer and IoT engineer.",
-    url: "https://varun-pahuja.github.io/portfolio",
+    url: baseUrl,
     siteName: "Varun Pahuja Portfolio",
     images: [
       {
