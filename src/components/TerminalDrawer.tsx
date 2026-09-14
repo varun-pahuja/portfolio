@@ -303,17 +303,35 @@ export default function TerminalDrawer({
             <div className="text-xs font-mono space-y-2 p-3 rounded bg-[var(--bg-lacquer)] border border-[var(--border-subtle)] text-[var(--text-parchment)]">
               <div className="flex items-center justify-between text-[var(--accent)] border-b border-[var(--border-subtle)] pb-1 mb-1 font-bold">
                 <span>VARUN PAHUJA — CURRICULUM VITAE</span>
-                <span className="text-emerald-400">CGPA: 8.06</span>
+                <span className="text-emerald-400">CGPA: 8.06 (3rd Year)</span>
               </div>
-              <p><strong className="text-[var(--text-washi)]">Education:</strong> B.Tech in IoT, MITS Gwalior (2023–2027)</p>
-              <p><strong className="text-[var(--text-washi)]">Experience:</strong> Full Stack Intern @ Infotact (CRDT / APIs), Cybersecurity Intern @ Thiranex (ML), Webmaster Head @ IEEE IAS</p>
-              <p><strong className="text-[var(--text-washi)]">Top Stack:</strong> React 19, Next.js 16, TypeScript, Node.js, ESP32, Yjs CRDT, Python</p>
+              <p><strong className="text-[var(--text-washi)]">Education:</strong> B.Tech in IoT, MITS Gwalior (2024–2028)</p>
+              <p><strong className="text-[var(--text-washi)]">Experience:</strong> Full Stack Intern @ Infotact Solutions, Cybersecurity Intern @ Thiranex, Webmaster Head @ IEEE IAS</p>
+              <p><strong className="text-[var(--text-washi)]">Top Stack:</strong> React 19, Next.js 16, TypeScript, Node.js, ESP32, Python, scikit-learn, MongoDB, Redis</p>
+              <p><strong className="text-[var(--text-washi)]">Contact:</strong> +91 7415710476 • varunpahuja2005@gmail.com</p>
               <div className="pt-2 border-t border-[var(--border-subtle)] flex flex-wrap items-center gap-4">
-                <a href="mailto:varunpahuja2005@gmail.com" className="text-[var(--accent)] underline font-bold">
-                  ✉️ Request Official PDF
+                <a
+                  href="/Resume.pdf"
+                  download="Varun_Pahuja_Resume.pdf"
+                  className="px-2.5 py-1 rounded bg-[var(--accent-vermillion)] text-black font-bold flex items-center gap-1.5 hover:brightness-110 shadow-sm"
+                >
+                  📥 Download Resume (PDF)
                 </a>
-                <a href="https://linkedin.com/in/varun-pahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent-gold)] underline">
-                  LinkedIn Dossier
+                <a
+                  href="/Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--text-washi)] underline hover:text-[var(--accent-vermillion)]"
+                >
+                  📄 Open in Browser Tab
+                </a>
+                <a
+                  href="https://linkedin.com/in/varunpahuja475"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--accent-gold)] underline"
+                >
+                  LinkedIn Profile
                 </a>
               </div>
             </div>

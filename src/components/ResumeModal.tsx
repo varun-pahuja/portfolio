@@ -51,9 +51,10 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                 Full-Stack Developer &amp; Internet of Things Engineer
               </p>
               <div className="flex flex-wrap items-center gap-4 mt-3 text-xs text-[var(--text-stone)] font-mono">
-                <span>📍 Gwalior, India / Remote</span>
+                <span>📍 Gwalior, Madhya Pradesh</span>
+                <span>📞 +91 7415710476</span>
                 <span>✉️ varunpahuja2005@gmail.com</span>
-                <span>🎓 CGPA: 8.06 / 10.0</span>
+                <span>🎓 CGPA: 8.06 (3rd Year)</span>
               </div>
             </div>
 
@@ -66,7 +67,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
               <div className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/40 space-y-1 text-xs">
                 <div className="flex justify-between items-baseline font-bold text-[var(--text-washi)]">
                   <span>Madhav Institute of Technology and Science (MITS), Gwalior</span>
-                  <span className="font-mono text-[var(--text-stone)]">2023 — 2027</span>
+                  <span className="font-mono text-[var(--text-stone)]">2024 — 2028</span>
                 </div>
                 <div className="text-[var(--accent-vermillion)]">
                   B.Tech in Internet of Things (IoT) • Current CGPA: 8.06
@@ -148,24 +149,35 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
 
             {/* Bottom Actions */}
             <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[var(--border-subtle)]">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <a
-                  href="mailto:varunpahuja2005@gmail.com"
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[var(--accent-vermillion)] text-white text-xs font-semibold hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)] transition-all"
+                  href="/Resume.pdf"
+                  download="Varun_Pahuja_Resume.pdf"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[var(--accent-vermillion)] text-white text-xs font-semibold hover:shadow-[0_0_15px_rgba(var(--accent-rgb),0.4)] transition-all cursor-pointer"
                   onClick={() => playSound("click")}
                 >
-                  <Mail className="w-3.5 h-3.5" />
-                  Request Official PDF
+                  <Download className="w-3.5 h-3.5" />
+                  Download Resume (PDF)
                 </a>
                 <a
-                  href="https://linkedin.com/in/varun-pahuja"
+                  href="/Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-[var(--text-stone)] hover:text-[var(--text-washi)] font-semibold"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-[var(--border-dim)] bg-white/[0.03] text-xs text-[var(--text-parchment)] hover:text-[var(--text-washi)] hover:border-[var(--accent-vermillion)]/40 transition-all font-semibold"
                   onClick={() => playSound("click")}
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  View LinkedIn
+                  Open in Tab
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/varunpahuja475/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-[var(--text-stone)] hover:text-[var(--text-washi)] font-semibold"
+                  onClick={() => playSound("click")}
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  LinkedIn
                 </a>
               </div>
               <button
