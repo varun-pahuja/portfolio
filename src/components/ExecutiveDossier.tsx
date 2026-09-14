@@ -184,7 +184,7 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
                 </button>
 
                 <a
-                  href="https://linkedin.com/in/varun-pahuja"
+                  href="https://www.linkedin.com/in/varun-pahuja475/"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => playSound("click")}

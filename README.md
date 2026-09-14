@@ -297,4 +297,4 @@ npm run start
 - **Email:** [varunpahuja2005@gmail.com](mailto:varunpahuja2005@gmail.com)
 - **Portfolio:** [https://varunpahuja04.vercel.app](https://varunpahuja04.vercel.app)
 - **GitHub:** [@varun-pahuja](https://github.com/varun-pahuja)
-- **LinkedIn:** [Varun Pahuja](https://linkedin.com/in/varun-pahuja)
+- **LinkedIn:** [Varun Pahuja](https://www.linkedin.com/in/varun-pahuja475/)

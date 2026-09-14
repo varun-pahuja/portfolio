@@ -208,7 +208,7 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
                   Open in Tab
                 </a>
                 <a
-                  href="https://www.linkedin.com/in/varunpahuja475/"
+                  href="https://www.linkedin.com/in/varun-pahuja475/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs text-[var(--text-stone)] hover:text-[var(--text-washi)] font-semibold"

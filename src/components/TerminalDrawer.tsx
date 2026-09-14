@@ -372,8 +372,8 @@ export default function TerminalDrawer({
           output = (
             <div className="text-xs space-y-1 text-[var(--text-stone)]">
               <p>• Email: <span className="text-[var(--text-parchment)]">varunpahuja2005@gmail.com</span></p>
-              <p>• GitHub: <a href="https://github.com/varunpahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] underline">github.com/varunpahuja</a></p>
-              <p>• LinkedIn: <a href="https://linkedin.com/in/varun-pahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] underline">linkedin.com/in/varun-pahuja</a></p>
+              <p>• GitHub: <a href="https://github.com/varun-pahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] underline">github.com/varun-pahuja</a></p>
+              <p>• LinkedIn: <a href="https://www.linkedin.com/in/varun-pahuja475/" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] underline">linkedin.com/in/varun-pahuja475</a></p>
             </div>
           );
           break;
@@ -407,7 +407,7 @@ export default function TerminalDrawer({
                   📄 Open in Browser Tab
                 </a>
                 <a
-                  href="https://linkedin.com/in/varunpahuja475"
+                  href="https://www.linkedin.com/in/varun-pahuja475/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[var(--accent-gold)] underline"
