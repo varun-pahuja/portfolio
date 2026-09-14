@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -326,6 +327,11 @@ interface CaseStudyModalProps {
 export default function CaseStudyModal({ isOpen, studyId, onClose }: CaseStudyModalProps) {
   const [selectedId, setSelectedId] = useState<CaseStudyId | null>(studyId);
   const [activeTab, setActiveTab] = useState<"pipeline" | "tradeoffs" | "benchmarks">("pipeline");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (studyId) {
@@ -333,211 +339,260 @@ export default function CaseStudyModal({ isOpen, studyId, onClose }: CaseStudyMo
     }
   }, [studyId]);
 
-  if (!isOpen) return null;
+  // Lock body scroll & listen for Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        playSound("switch");
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!mounted) return null;
+
   const currentId = selectedId || studyId || "airmouse";
   const study = CASE_STUDIES[currentId];
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/75 backdrop-blur-md">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-3xl bg-[var(--bg-void)] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden text-left my-8"
+      {isOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              playSound("switch");
+              onClose();
+            }
+          }}
+          className="fixed inset-0 z-[99999] flex items-start justify-center p-4 pt-20 sm:p-6 sm:pt-24 md:pt-24 pb-12 sm:pb-16 overflow-y-auto bg-black/80 backdrop-blur-md"
         >
-          {/* Top Architectural Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/60 gap-3">
-            <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)]">
-              <span className="w-2 h-2 rounded-full bg-[var(--accent-vermillion)] animate-pulse" />
-              <span className="text-[var(--accent-vermillion)] font-bold">{study.badge}</span>
-              <span className="text-[var(--text-stone)]">// ARCHITECTURE DOSSIER</span>
-            </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-3xl bg-[var(--bg-void)] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden text-left my-2 sm:my-4"
+          >
+            {/* Top Architectural Header - Sticky so it is ALWAYS visible and never lost during scroll */}
+            <div className="sticky top-0 z-20 flex items-center justify-between px-4 sm:px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/95 backdrop-blur-md gap-3">
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar min-w-0 py-0.5">
+                <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)] shrink-0 mr-1">
+                  <span className="w-2 h-2 rounded-full bg-[var(--accent-vermillion)] animate-pulse" />
+                  <span className="text-[var(--accent-vermillion)] font-bold hidden sm:inline">{study.badge}</span>
+                  <span className="text-[var(--text-stone)] hidden md:inline">// ARCHITECTURE DOSSIER</span>
+                </div>
 
-            {/* Quick System Switcher */}
-            <div className="flex items-center gap-1.5 overflow-x-auto">
-              {(["airmouse", "syncdoc", "oceanembed", "webcmd"] as const).map((id) => (
-                <button
-                  key={id}
-                  onClick={() => {
-                    playSound("click");
-                    setSelectedId(id);
-                  }}
-                  className={`px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
-                    currentId === id
-                      ? "bg-[var(--accent-vermillion)] text-black font-bold shadow-sm"
-                      : "text-[var(--text-stone)] hover:text-[var(--text-washi)] bg-white/[0.03] border border-[var(--border-subtle)]"
-                  }`}
-                >
-                  {id === "airmouse" && "Air Mouse"}
-                  {id === "syncdoc" && "SyncDoc"}
-                  {id === "oceanembed" && "OceanEmbed"}
-                  {id === "webcmd" && "webcmd"}
-                </button>
-              ))}
+                {/* Quick System Switcher */}
+                <div className="flex items-center gap-1 shrink-0">
+                  {(["airmouse", "syncdoc", "oceanembed", "webcmd"] as const).map((id) => (
+                    <button
+                      key={id}
+                      onClick={() => {
+                        playSound("click");
+                        setSelectedId(id);
+                      }}
+                      className={`px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                        currentId === id
+                          ? "bg-[var(--accent-vermillion)] text-black font-bold shadow-sm"
+                          : "text-[var(--text-stone)] hover:text-[var(--text-washi)] bg-white/[0.03] border border-[var(--border-subtle)]"
+                      }`}
+                    >
+                      {id === "airmouse" && "Air Mouse"}
+                      {id === "syncdoc" && "SyncDoc"}
+                      {id === "oceanembed" && "OceanEmbed"}
+                      {id === "webcmd" && "webcmd"}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
+              {/* Pinned Close Button - Always visible and easily accessible */}
               <button
                 onClick={() => {
                   playSound("switch");
                   onClose();
                 }}
-                className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer ml-1"
+                className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer shrink-0 ml-2"
                 aria-label="Close Case Study"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-          </div>
 
-          <div className="p-6 md:p-8 space-y-6 max-h-[80vh] overflow-y-auto">
-            {/* Title & Subtitle */}
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-washi)] font-sans">
-                {study.title}
-              </h2>
-              <p className="text-sm text-[var(--accent-gold)] font-[family-name:var(--font-geist-mono)] mt-1">
-                {study.subtitle}
-              </p>
-              <p className="text-sm text-[var(--text-parchment)] leading-relaxed mt-3">
-                {study.overview}
-              </p>
-            </div>
+            <div className="p-6 md:p-8 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+              {/* Title & Subtitle */}
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-[var(--text-washi)] font-sans">
+                  {study.title}
+                </h2>
+                <p className="text-sm text-[var(--accent-gold)] font-[family-name:var(--font-geist-mono)] mt-1">
+                  {study.subtitle}
+                </p>
+                <p className="text-sm text-[var(--text-parchment)] leading-relaxed mt-3">
+                  {study.overview}
+                </p>
+              </div>
 
-            {/* Constraints HUD */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {study.constraints.map((c) => (
-                <div
-                  key={c.label}
-                  className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/50 space-y-1"
-                >
-                  <div className="flex items-center justify-between text-xs font-[family-name:var(--font-geist-mono)]">
-                    <span className="text-[var(--text-stone)]">{c.label}</span>
-                    <span className="text-[var(--accent-vermillion)] font-bold">{c.value}</span>
-                  </div>
-                  <p className="text-xs text-[var(--text-parchment)] leading-normal">
-                    {c.detail}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Interactive Tab Switcher */}
-            <div className="border-b border-[var(--border-subtle)] flex items-center gap-4 text-xs font-[family-name:var(--font-geist-mono)] pt-2">
-              {(["pipeline", "tradeoffs", "benchmarks"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => {
-                    playSound("click");
-                    setActiveTab(tab);
-                  }}
-                  className={`pb-2 transition-all cursor-pointer uppercase tracking-wider relative ${
-                    activeTab === tab
-                      ? "text-[var(--accent-vermillion)] font-bold"
-                      : "text-[var(--text-stone)] hover:text-[var(--text-washi)]"
-                  }`}
-                >
-                  {tab === "pipeline" && "Data Flow Pipeline"}
-                  {tab === "tradeoffs" && "Architectural Trade-offs"}
-                  {tab === "benchmarks" && "Verified Benchmarks"}
-                  {activeTab === tab && (
-                    <motion.div
-                      layoutId="tab-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--accent-vermillion)]"
-                    />
-                  )}
-                </button>
-              ))}
-            </div>
-
-            {/* Tab Contents */}
-            {activeTab === "pipeline" && (
-              <div className="space-y-3">
-                {study.pipeline.map((p, i) => (
+              {/* Constraints HUD */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {study.constraints.map((c) => (
                   <div
-                    key={p.step}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3.5 rounded-lg border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.7)]"
+                    key={c.label}
+                    className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/50 space-y-1"
                   >
-                    <div className="space-y-0.5">
-                      <div className="text-xs font-bold text-[var(--text-washi)] font-[family-name:var(--font-geist-mono)]">
-                        {p.step}
+                    <div className="flex items-center justify-between text-xs font-[family-name:var(--font-geist-mono)]">
+                      <span className="text-[var(--text-stone)]">{c.label}</span>
+                      <span className="text-[var(--accent-vermillion)] font-bold">{c.value}</span>
+                    </div>
+                    <p className="text-xs text-[var(--text-parchment)] leading-normal">
+                      {c.detail}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
+              {/* Interactive Tab Switcher */}
+              <div className="border-b border-[var(--border-subtle)] flex items-center gap-4 text-xs font-[family-name:var(--font-geist-mono)] pt-2">
+                {(["pipeline", "tradeoffs", "benchmarks"] as const).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => {
+                      playSound("click");
+                      setActiveTab(tab);
+                    }}
+                    className={`pb-2 transition-all cursor-pointer uppercase tracking-wider relative ${
+                      activeTab === tab
+                        ? "text-[var(--accent-vermillion)] font-bold"
+                        : "text-[var(--text-stone)] hover:text-[var(--text-washi)]"
+                    }`}
+                  >
+                    {tab === "pipeline" && "Data Flow Pipeline"}
+                    {tab === "tradeoffs" && "Architectural Trade-offs"}
+                    {tab === "benchmarks" && "Empirical Benchmarks"}
+                    {activeTab === tab && (
+                      <motion.div
+                        layoutId="case-study-tab"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent-vermillion)]"
+                      />
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              {/* Tab 1: Data Flow Pipeline */}
+              {activeTab === "pipeline" && (
+                <div className="space-y-3 pt-1">
+                  {study.pipeline.map((p, idx) => (
+                    <div
+                      key={p.step}
+                      className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.7)] hover:border-[var(--accent-vermillion)]/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    >
+                      <div className="space-y-1">
+                        <div className="text-xs font-bold text-[var(--text-washi)] font-mono flex items-center gap-2">
+                          <span className="text-[var(--accent-vermillion)]">{idx + 1}.</span>
+                          <span>{p.step}</span>
+                        </div>
+                        <p className="text-xs text-[var(--text-parchment)] leading-normal pl-4">
+                          {p.desc}
+                        </p>
                       </div>
-                      <p className="text-xs text-[var(--text-parchment)]">{p.desc}</p>
+                      <div className="px-2.5 py-1 rounded bg-white/[0.04] border border-[var(--border-subtle)] text-[10px] font-mono text-[var(--accent-gold)] whitespace-nowrap self-start sm:self-center">
+                        {p.tech}
+                      </div>
                     </div>
-                    <span className="inline-flex self-start sm:self-center px-2 py-0.5 text-[10px] font-mono rounded bg-white/[0.04] border border-[var(--border-dim)] text-[var(--accent-gold)] whitespace-nowrap">
-                      {p.tech}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            {activeTab === "tradeoffs" && (
-              <div className="space-y-3">
-                {study.tradeoffs.map((t) => (
-                  <div
-                    key={t.choice}
-                    className="p-4 rounded-lg border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.7)] space-y-2 text-xs"
-                  >
-                    <div className="font-bold text-[var(--text-washi)] flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>{t.choice}</span>
+              {/* Tab 2: Architectural Trade-offs */}
+              {activeTab === "tradeoffs" && (
+                <div className="space-y-3 pt-1">
+                  {study.tradeoffs.map((t) => (
+                    <div
+                      key={t.choice}
+                      className="p-4 rounded-xl border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.7)] space-y-2.5"
+                    >
+                      <div className="flex items-center gap-2 text-xs font-bold text-[var(--text-washi)] font-mono">
+                        <Zap className="w-3.5 h-3.5 text-[var(--accent-vermillion)]" />
+                        <span>{t.choice}</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div className="p-2.5 rounded-lg bg-[var(--accent-vermillion)]/5 border border-[var(--accent-vermillion)]/20 space-y-1">
+                          <div className="text-[10px] uppercase font-mono text-[var(--accent-vermillion)] font-bold">
+                            Engineered Choice &amp; Rationale
+                          </div>
+                          <p className="text-[var(--text-washi)] leading-relaxed">{t.why}</p>
+                        </div>
+                        <div className="p-2.5 rounded-lg bg-white/[0.02] border border-[var(--border-subtle)] space-y-1">
+                          <div className="text-[10px] uppercase font-mono text-[var(--text-stone)]">
+                            Alternative Evaluated &amp; Dropped
+                          </div>
+                          <p className="text-[var(--text-stone)] leading-relaxed">{t.alternative}</p>
+                        </div>
+                      </div>
                     </div>
-                    <p className="text-[var(--text-parchment)] leading-relaxed pl-5">
-                      <strong className="text-[var(--text-stone)]">Rationale:</strong> {t.why}
-                    </p>
-                    <p className="text-[var(--text-stone)] pl-5 italic">
-                      Alternative: {t.alternative}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            {activeTab === "benchmarks" && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {study.benchmarks.map((b) => (
-                  <div
-                    key={b.metric}
-                    className="p-3.5 rounded-lg border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.7)] text-center space-y-1"
-                  >
-                    <div className="text-2xl font-bold font-[family-name:var(--font-geist-mono)] text-[var(--accent-vermillion)]">
-                      {b.result}
+              {/* Tab 3: Empirical Benchmarks */}
+              {activeTab === "benchmarks" && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+                  {study.benchmarks.map((b) => (
+                    <div
+                      key={b.metric}
+                      className="p-3.5 rounded-lg border border-[var(--border-subtle)] bg-[rgba(6,6,10,0.7)] text-center space-y-1"
+                    >
+                      <div className="text-2xl font-bold font-[family-name:var(--font-geist-mono)] text-[var(--accent-vermillion)]">
+                        {b.result}
+                      </div>
+                      <div className="text-[10px] text-[var(--accent-gold)] uppercase font-mono">
+                        {b.unit}
+                      </div>
+                      <div className="text-xs text-[var(--text-stone)]">{b.metric}</div>
                     </div>
-                    <div className="text-[10px] text-[var(--accent-gold)] uppercase font-mono">
-                      {b.unit}
-                    </div>
-                    <div className="text-xs text-[var(--text-stone)]">{b.metric}</div>
-                  </div>
-                ))}
-              </div>
-            )}
+                  ))}
+                </div>
+              )}
 
-            {/* Bottom Actions */}
-            <div className="flex items-center justify-between pt-4 border-t border-[var(--border-subtle)]">
-              <a
-                href={study.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => playSound("click")}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-vermillion)] hover:underline"
-              >
-                <span>Inspect Repository Source</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-              <button
-                onClick={() => {
-                  playSound("switch");
-                  onClose();
-                }}
-                className="px-4 py-1.5 rounded-lg bg-white/[0.05] border border-[var(--border-dim)] text-xs text-[var(--text-washi)] hover:bg-white/[0.1] transition-all cursor-pointer"
-              >
-                Close Inspector
-              </button>
+              {/* Bottom Actions */}
+              <div className="flex items-center justify-between pt-4 border-t border-[var(--border-subtle)]">
+                <a
+                  href={study.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => playSound("click")}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-vermillion)] hover:underline"
+                >
+                  <span>Inspect Repository Source</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+                <button
+                  onClick={() => {
+                    playSound("switch");
+                    onClose();
+                  }}
+                  className="px-4 py-1.5 rounded-lg bg-white/[0.05] border border-[var(--border-dim)] text-xs text-[var(--text-washi)] hover:bg-white/[0.1] transition-all cursor-pointer"
+                >
+                  Close Inspector
+                </button>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      </div>
-    </AnimatePresence>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -40,8 +41,32 @@ interface ExecutiveDossierProps {
 
 export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierProps) {
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll & listen for Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        playSound("switch");
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   const handleCopyEmail = () => {
     playSound("click");
@@ -55,51 +80,62 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
     window.print();
   };
 
-  return (
-    <AnimatePresence>
-      <div className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto bg-black/85 backdrop-blur-xl dossier-modal-overlay print-container">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 15 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 15 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl bg-[#09090e] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden my-6 text-left dossier-card"
-        >
-          {/* Top Tactical Status Bar (Hidden in Print) */}
-          <div className="flex items-center justify-between px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/70 no-print">
-            <div className="flex items-center gap-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-xs font-mono font-bold text-[var(--accent-vermillion)] uppercase tracking-wider">
-                EXECUTIVE DOSSIER // RECRUITER FAST-TRACK
-              </span>
-              <span className="hidden sm:inline text-xs font-mono text-[var(--text-stone)]">
-                [15-SEC HIGH-SIGNAL SUMMARY]
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={handlePrint}
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
-                title="Print or Save as PDF"
-              >
-                <Printer className="w-3.5 h-3.5" />
-                <span>Print Dossier</span>
-              </button>
-              <button
-                onClick={() => {
-                  playSound("switch");
-                  onClose();
-                }}
-                className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
-                aria-label="Close Executive Mode"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+  if (!mounted) return null;
 
-          <div className="p-6 md:p-8 space-y-6 max-h-[85vh] overflow-y-auto font-sans dossier-scroll-area">
-            {/* Header: Candidate Identity & Direct Actions */}
+  return createPortal(
+    <AnimatePresence>
+      {isOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              playSound("switch");
+              onClose();
+            }
+          }}
+          className="fixed inset-0 z-[99999] flex items-start justify-center p-3 pt-20 sm:p-6 sm:pt-24 md:pt-24 pb-12 sm:pb-16 overflow-y-auto bg-black/85 backdrop-blur-xl dossier-modal-overlay print-container"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: 15 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-4xl bg-[#09090e] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden my-2 sm:my-4 text-left dossier-card"
+          >
+            {/* Top Tactical Status Bar (Hidden in Print) */}
+            <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/95 backdrop-blur-md no-print">
+              <div className="flex items-center gap-2.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-mono font-bold text-[var(--accent-vermillion)] uppercase tracking-wider">
+                  EXECUTIVE DOSSIER // RECRUITER FAST-TRACK
+                </span>
+                <span className="hidden sm:inline text-xs font-mono text-[var(--text-stone)]">
+                  [15-SEC HIGH-SIGNAL SUMMARY]
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePrint}
+                  className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg border border-[var(--border-subtle)] text-xs font-mono text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
+                  title="Print or Save as PDF"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Print Dossier</span>
+                </button>
+                <button
+                  onClick={() => {
+                    playSound("switch");
+                    onClose();
+                  }}
+                  className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
+                  aria-label="Close Executive Mode"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 md:p-8 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto font-sans dossier-scroll-area">
+              {/* Header: Candidate Identity & Direct Actions */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-[var(--border-subtle)] dossier-section">
               <div>
                 <div className="flex items-center gap-3">
@@ -404,6 +440,8 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+      )}
+    </AnimatePresence>,
+    document.body
   );
 }

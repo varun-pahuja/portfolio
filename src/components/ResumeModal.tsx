@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download, ExternalLink, Briefcase, GraduationCap, Award, Cpu, Mail } from "lucide-react";
 import { playSound } from "@/lib/audio";
@@ -10,39 +12,75 @@ interface ResumeModalProps {
 }
 
 export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Lock body scroll & listen for Escape key
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        playSound("switch");
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-black/80 backdrop-blur-md">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-2xl bg-[var(--bg-void)] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden text-left my-8"
+      {isOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              playSound("switch");
+              onClose();
+            }
+          }}
+          className="fixed inset-0 z-[99999] flex items-start justify-center p-4 pt-20 sm:p-6 sm:pt-24 md:pt-24 pb-12 sm:pb-16 overflow-y-auto bg-black/80 backdrop-blur-md"
         >
-          {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/60">
-            <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[var(--text-washi)] font-bold">VARUN PAHUJA</span>
-              <span className="text-[var(--text-stone)]">// VERIFIED RESUME DOSSIER</span>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 15 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-2xl bg-[var(--bg-void)] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden text-left my-2 sm:my-4"
+          >
+            {/* Header - Sticky so it is ALWAYS visible */}
+            <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/95 backdrop-blur-md">
+              <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)]">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[var(--text-washi)] font-bold">VARUN PAHUJA</span>
+                <span className="text-[var(--text-stone)]">// VERIFIED RESUME DOSSIER</span>
+              </div>
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  onClose();
+                }}
+                className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
+                aria-label="Close Resume"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <button
-              onClick={() => {
-                playSound("switch");
-                onClose();
-              }}
-              className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
-              aria-label="Close Resume"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
 
-          <div className="p-6 md:p-8 space-y-6 max-h-[75vh] overflow-y-auto">
-            {/* Identity Banner */}
+            <div className="p-6 md:p-8 space-y-6 max-h-[calc(100vh-200px)] overflow-y-auto">
+              {/* Identity Banner */}
             <div className="border-b border-[var(--border-subtle)] pb-5">
               <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-washi)] font-sans">
                 Varun Pahuja
@@ -193,6 +231,8 @@ export default function ResumeModal({ isOpen, onClose }: ResumeModalProps) {
           </div>
         </motion.div>
       </div>
-    </AnimatePresence>
+      )}
+    </AnimatePresence>,
+    document.body
   );
 }
