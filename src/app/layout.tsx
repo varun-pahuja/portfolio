@@ -68,6 +68,13 @@ export const metadata: Metadata = {
         type: "image/jpeg",
       },
       {
+        url: "/og-thumb.jpg",
+        width: 400,
+        height: 400,
+        alt: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
+        type: "image/jpeg",
+      },
+      {
         url: "/og-image.png",
         width: 1200,
         height: 630,
@@ -121,11 +128,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      prefix="og: http://ogp.me/ns#"
       className={`${geistSans.variable} ${geistMono.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <head>
         <link rel="preconnect" href="https://api.fontshare.com" />
         <link href="https://api.fontshare.com/v2/css?f[]=clash-display@400;500;600;700&display=swap" rel="stylesheet" />
+        <meta property="og:image:secure_url" content="https://varunpahuja04.vercel.app/og-image.jpg" />
+        <meta property="og:image:secure_url" content="https://varunpahuja04.vercel.app/og-thumb.jpg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
