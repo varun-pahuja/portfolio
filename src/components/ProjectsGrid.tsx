@@ -11,6 +11,8 @@ import {
   Layers,
   CheckCircle2,
   RotateCcw,
+  Waves,
+  Bot,
 } from "lucide-react";
 import { playSound } from "@/lib/audio";
 import CaseStudyModal from "./CaseStudyModal";
@@ -78,6 +80,20 @@ const NASA_QUERIES = [
   },
 ];
 
+const OCEAN_DEPTHS = [
+  { depth: "10m", temp: "28.4°C", error: "±0.51°C", layer: "Surface Mixed Layer" },
+  { depth: "50m", temp: "26.1°C", error: "±0.68°C", layer: "Thermocline Upper Boundary" },
+  { depth: "150m", temp: "18.9°C", error: "±0.74°C", layer: "Rapid Thermocline Transition" },
+  { depth: "500m", temp: "10.2°C", error: "±0.62°C", layer: "Intermediate Water Mass" },
+  { depth: "1000m", temp: "6.4°C", error: "±0.48°C", layer: "Deep Abyssal Layer" },
+];
+
+const WEBCMD_SCENARIOS = [
+  { name: "Multi-Step Auth & Form", raw: "128,400", cached: "12,200", saved: "90.5%" },
+  { name: "E-Commerce Checkout", raw: "84,600", cached: "9,100", saved: "89.2%" },
+  { name: "SPA Table Extraction", raw: "196,000", cached: "18,400", saved: "90.6%" },
+];
+
 const OMNIPOST_PLATFORMS = {
   x: {
     label: "X / Twitter",
@@ -119,6 +135,10 @@ export default function ProjectsGrid() {
 
   // Interactive State: Omnipost Switcher
   const [platform, setPlatform] = useState<"x" | "linkedin" | "instagram">("x");
+
+  // Interactive State: OceanEmbed & webcmd
+  const [oceanDepthIdx, setOceanDepthIdx] = useState(1);
+  const [webcmdIdx, setWebcmdIdx] = useState(0);
 
   const handleNextCrdt = () => {
     playSound("switch");
@@ -436,12 +456,223 @@ export default function ProjectsGrid() {
           </motion.article>
 
           {/* ─────────────────────────────────────────────────────────────
-           * TILE 3: Omnipost — Multi-Platform AI Engine (12 Columns Full-Width)
+           * TILE 3: OceanEmbed — Satellite AI Subsurface Reconstruction (6 Columns)
+           * ───────────────────────────────────────────────────────────── */}
+          <motion.article
+            initial={{ opacity: 0, y: 24 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="lg:col-span-6 flex flex-col justify-between bg-[var(--bg-lacquer)] border border-[var(--border-dim)] rounded-xl p-6 md:p-8 relative overflow-hidden shadow-2xl group hover:border-[var(--accent-vermillion)]/40 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4 mb-6 text-xs font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)]">
+              <div className="flex items-center gap-2">
+                <Waves className="w-4 h-4 text-cyan-400" />
+                <span className="font-semibold text-[var(--text-washi)]">MoES // INCOIS</span>
+                <span>{"// SATELLITE RECONSTRUCTION"}</span>
+              </div>
+              <span className="text-cyan-400 font-mono">0.25° RESOLUTION</span>
+            </div>
+
+            <div>
+              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+                <h3 className="font-sans text-2xl md:text-3xl font-bold text-[var(--text-washi)]">
+                  OceanEmbed
+                </h3>
+                <span className="text-xs px-2.5 py-0.5 rounded-full border border-cyan-400/30 text-cyan-300 font-medium">
+                  Vision Transformer
+                </span>
+              </div>
+              <p className="text-sm text-[var(--text-parchment)] leading-relaxed mb-6">
+                Reconstructs 3D depth-wise ocean temperature profiles (2m to 1000m) across the North
+                Indian Ocean strictly from 2D satellite surface observations using Vision Transformers and CNNs.
+              </p>
+
+              {/* Interactive Depth Telemetry Probe */}
+              <div className="rounded-lg border border-[var(--border-dim)] bg-[rgba(6,6,10,0.85)] p-4 mb-6">
+                <div className="text-[11px] font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)] mb-2 uppercase tracking-wider flex items-center justify-between">
+                  <span>Target Subsurface Depth:</span>
+                  <span className="text-cyan-400 font-mono">ARGO BENCHMARK</span>
+                </div>
+
+                {/* Depth selector pills */}
+                <div className="flex flex-wrap gap-1.5 mb-3">
+                  {OCEAN_DEPTHS.map((item, idx) => (
+                    <button
+                      key={item.depth}
+                      onClick={() => {
+                        playSound("click");
+                        setOceanDepthIdx(idx);
+                      }}
+                      className={`text-xs px-2.5 py-1 rounded transition-all font-[family-name:var(--font-geist-mono)] cursor-pointer ${
+                        oceanDepthIdx === idx
+                          ? "bg-cyan-500/20 border border-cyan-400 text-cyan-200 font-bold"
+                          : "border border-transparent bg-white/[0.02] text-[var(--text-stone)] hover:text-[var(--text-parchment)]"
+                      }`}
+                    >
+                      {item.depth}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Telemetry Output HUD */}
+                <div className="p-3 rounded bg-[var(--bg-ink)] border border-[var(--border-subtle)] space-y-1 text-xs font-[family-name:var(--font-geist-mono)]">
+                  <div className="flex justify-between items-center text-[var(--text-washi)]">
+                    <span className="text-[var(--text-stone)]">Ocean Layer:</span>
+                    <span>{OCEAN_DEPTHS[oceanDepthIdx].layer}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[var(--text-washi)]">
+                    <span className="text-[var(--text-stone)]">Reconstructed Temp:</span>
+                    <span className="text-cyan-400 font-bold text-sm">{OCEAN_DEPTHS[oceanDepthIdx].temp}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-[var(--text-stone)] text-[11px] pt-1 border-t border-[var(--border-subtle)]">
+                    <span>Validation Error:</span>
+                    <span className="text-emerald-400">{OCEAN_DEPTHS[oceanDepthIdx].error} RMSE</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tech Tags */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {["PyTorch", "Vision Transformer", "CNN", "INCOIS Data", "ARGO Telemetry", "Python"].map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-2.5 py-1 text-xs rounded border border-[var(--border-dim)] bg-[rgba(255,255,255,0.02)] text-[var(--text-parchment)] font-[family-name:var(--font-geist-mono)]"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Bar */}
+            <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
+              <a
+                href="https://github.com/varun-pahuja/SIHPS66"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => playSound("click")}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--text-washi)] hover:text-cyan-400 transition-colors"
+              >
+                <GithubIcon className="w-4 h-4" />
+                Inspect Model Architecture
+              </a>
+            </div>
+          </motion.article>
+
+          {/* ─────────────────────────────────────────────────────────────
+           * TILE 4: webcmd — Autonomous Agent Browser Infrastructure (6 Columns)
            * ───────────────────────────────────────────────────────────── */}
           <motion.article
             initial={{ opacity: 0, y: 24 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
+            className="lg:col-span-6 flex flex-col justify-between bg-[var(--bg-lacquer)] border border-[var(--border-dim)] rounded-xl p-6 md:p-8 relative overflow-hidden shadow-2xl group hover:border-[var(--accent-vermillion)]/40 transition-all duration-300"
+          >
+            <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-4 mb-6 text-xs font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)]">
+              <div className="flex items-center gap-2">
+                <Bot className="w-4 h-4 text-violet-400" />
+                <span className="font-semibold text-[var(--text-washi)]">AGENT INFRA</span>
+                <span>{"// DOM COMPACTION"}</span>
+              </div>
+              <span className="text-violet-400 font-mono">90% SAVINGS</span>
+            </div>
+
+            <div>
+              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+                <h3 className="font-sans text-2xl md:text-3xl font-bold text-[var(--text-washi)]">
+                  webcmd
+                </h3>
+                <span className="text-xs px-2.5 py-0.5 rounded-full border border-violet-400/30 text-violet-300 font-medium">
+                  Browser Engine
+                </span>
+              </div>
+              <p className="text-sm text-[var(--text-parchment)] leading-relaxed mb-6">
+                Self-learning browser infrastructure for autonomous AI agents that stops agents from
+                rediscovering the web. Slashes LLM token expenditure by up to 90% via DOM hashing.
+              </p>
+
+              {/* Interactive Token Savings Telemetry */}
+              <div className="rounded-lg border border-[var(--border-dim)] bg-[rgba(6,6,10,0.85)] p-4 mb-6">
+                <div className="text-[11px] font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)] mb-2 uppercase tracking-wider flex items-center justify-between">
+                  <span>Agent Execution Context:</span>
+                  <span className="text-violet-400 font-mono">TOKEN BENCHMARK</span>
+                </div>
+
+                {/* Scenario selector */}
+                <div className="flex flex-col gap-1.5 mb-3">
+                  {WEBCMD_SCENARIOS.map((item, idx) => (
+                    <button
+                      key={item.name}
+                      onClick={() => {
+                        playSound("click");
+                        setWebcmdIdx(idx);
+                      }}
+                      className={`text-left text-xs px-2.5 py-1.5 rounded transition-all font-[family-name:var(--font-geist-mono)] cursor-pointer truncate ${
+                        webcmdIdx === idx
+                          ? "bg-violet-500/20 border border-violet-400 text-violet-200"
+                          : "border border-transparent bg-white/[0.02] text-[var(--text-stone)] hover:text-[var(--text-parchment)]"
+                      }`}
+                    >
+                      &gt; {item.name}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Token Comparison Bar */}
+                <div className="p-3 rounded bg-[var(--bg-ink)] border border-[var(--border-subtle)] space-y-2 text-xs font-[family-name:var(--font-geist-mono)]">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[var(--text-stone)]">Raw Context Cost:</span>
+                    <span className="text-rose-400 line-through">{WEBCMD_SCENARIOS[webcmdIdx].raw} tokens</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-[var(--text-stone)]">webcmd Cached Cost:</span>
+                    <span className="text-emerald-400 font-bold">{WEBCMD_SCENARIOS[webcmdIdx].cached} tokens</span>
+                  </div>
+                  <div className="w-full h-1.5 bg-neutral-900 rounded-full overflow-hidden mt-1">
+                    <div className="h-full bg-violet-400 rounded-full w-[90%]" />
+                  </div>
+                  <div className="flex justify-between items-center text-[10px] text-violet-300 pt-1">
+                    <span>DOM Hash Pruning Active</span>
+                    <span className="font-bold">{WEBCMD_SCENARIOS[webcmdIdx].saved} Tokens Saved</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Tech Tags */}
+              <div className="flex flex-wrap gap-2 mb-6">
+                {["TypeScript", "Node.js", "Playwright", "DOM Tree Hashing", "AI Agents", "NPM"].map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-2.5 py-1 text-xs rounded border border-[var(--border-dim)] bg-[rgba(255,255,255,0.02)] text-[var(--text-parchment)] font-[family-name:var(--font-geist-mono)]"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Action Bar */}
+            <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
+              <a
+                href="https://github.com/varun-pahuja/webcmd"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => playSound("click")}
+                className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--text-washi)] hover:text-violet-400 transition-colors"
+              >
+                <GithubIcon className="w-4 h-4" />
+                Inspect webcmd Engine
+              </a>
+            </div>
+          </motion.article>
+
+          {/* ─────────────────────────────────────────────────────────────
+           * TILE 5: Omnipost — Multi-Platform AI Engine (12 Columns Full-Width)
+           * ───────────────────────────────────────────────────────────── */}
+          <motion.article
+            initial={{ opacity: 0, y: 24 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.45 }}
             className="lg:col-span-12 bg-[var(--bg-lacquer)] border border-[var(--border-dim)] rounded-xl p-6 md:p-8 relative overflow-hidden shadow-2xl group hover:border-[var(--accent-vermillion)]/40 transition-all duration-300"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">

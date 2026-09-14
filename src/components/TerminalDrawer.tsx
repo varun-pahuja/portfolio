@@ -251,18 +251,27 @@ export default function TerminalDrawer({
 
         case "projects":
           output = (
-            <div className="text-xs space-y-1 text-[var(--text-stone)]">
+            <div className="text-xs space-y-1.5 p-2 rounded bg-[var(--bg-lacquer)] border border-[var(--border-subtle)] text-[var(--text-stone)]">
+              <div className="font-bold text-[var(--accent)] border-b border-[var(--border-subtle)] pb-1 mb-1">
+                [FLAGSHIP SYSTEMS &amp; REPOSITORIES]:
+              </div>
               <p>
-                <span className="text-[var(--accent)] font-bold">1. AutoCure</span> — Automated
-                Curing Tank with Smart Sensors & Real-Time Quality Tracking.
+                <span className="text-[var(--text-washi)] font-bold">1. Air Mouse AI:</span> Wireless ESP32 BLE HID gesture cursor with scikit-learn ML (~94% acc).
               </p>
               <p>
-                <span className="text-[var(--accent)] font-bold">2. EcoSync</span> — IoT Energy
-                Management Platform with automated power balancing.
+                <span className="text-[var(--text-washi)] font-bold">2. SyncDoc:</span> Distributed real-time collaborative document engine with Yjs CRDT &amp; Redis Pub/Sub.
               </p>
               <p>
-                <span className="text-[var(--accent)] font-bold">3. Smart Agritech</span> — Soil
-                chemistry & automated hydration telemetry node.
+                <span className="text-[var(--text-washi)] font-bold">3. OceanEmbed:</span> Satellite AI subsurface ocean temperature reconstruction (MoES / INCOIS Hackathon).
+              </p>
+              <p>
+                <span className="text-[var(--text-washi)] font-bold">4. webcmd:</span> Self-learning agent browser infra cutting LLM token spend by up to 90%.
+              </p>
+              <p>
+                <span className="text-[var(--text-washi)] font-bold">5. Hackmatrix:</span> NASA Space Biology RAG platform querying 630+ NASA OSDR datasets.
+              </p>
+              <p>
+                <span className="text-[var(--text-washi)] font-bold">6. Omnipost:</span> Multi-platform generative AI content engine (React 19, Gemini Flash, Firebase).
               </p>
             </div>
           );

@@ -82,7 +82,15 @@ A fully interactive 3D WebGL circuit board simulator built with React Three Fibe
 - Live vector similarity test bench querying NASA's Open Science Data Repository (630+ datasets).
 - Interactive cosine similarity calculation and cited scientific evidence chunks.
 
-### 4. Omnipost Live Output Morphing (`ProjectsGrid.tsx`)
+### 4. OceanEmbed Subsurface Ocean Temp Reconstruction (`ProjectsGrid.tsx`)
+- AI-driven oceanographic telemetry model predicting subsurface temperatures down to 1,000m depth from sea surface satellite observations (MoES / INCOIS Hackathon).
+- Interactive depth probe HUD inspecting RMSE error tolerances across 15 depth layers.
+
+### 5. webcmd Autonomous Agent Browser Infrastructure (`ProjectsGrid.tsx`)
+- Self-learning browser caching infrastructure that cuts autonomous AI agent LLM token consumption by up to 90% via DOM hash pruning.
+- Interactive token savings benchmark simulator comparing raw context costs against pruned DOM execution.
+
+### 6. Omnipost Live Output Morphing (`ProjectsGrid.tsx`)
 - Multi-platform AI content generator preview simulating dynamic tone adaptation across **X/Twitter**, **LinkedIn**, and **Instagram** with live latency metrics.
 
 ---
@@ -195,6 +203,8 @@ npm run start
 | **Air Mouse AI** | Embedded / ML / Web | ESP32, BLE HID, Next.js, Flask, scikit-learn | Wireless gesture-controlled mouse running ML models (~94% accuracy) with real-time web telemetry. |
 | **SyncDoc** | Distributed Systems | React 18, Yjs CRDT, Socket.io, Redis, MongoDB | Multi-user collaborative document editor with Lamport vector clocks and zero-collision convergence. |
 | **Hackmatrix** | AI / Space Biology | FastAPI, ChromaDB, HuggingFace, Groq LLM | Semantic RAG platform querying 630+ NASA Open Science Data Repository datasets. |
+| **OceanEmbed** | Deep Learning / Climate | PyTorch, Vision Transformers, CNNs, Satellite Data | Reconstructing 3D ocean temperature profiles down to 1000m depth across 15 layers for MoES/INCOIS. |
+| **webcmd** | Agent Infra / DevTools | TypeScript, Node.js, Playwright, DOM Hashing | High-speed browser execution layer for AI agents cutting LLM context token usage by up to 90%. |
 | **Omnipost** | Generative AI | React 19, Gemini 1.5 Flash, Express, Firebase | Multi-platform AI content generator adapting tone across X, LinkedIn, and Instagram. |
 
 ---

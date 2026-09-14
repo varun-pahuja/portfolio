@@ -50,7 +50,7 @@ const stats = [
   { value: "3", label: "Internships", sub: "Infotact, Thiranex, IEEE" },
   { value: "8.06", label: "CGPA", sub: "MITS Gwalior (IoT Spec)" },
   { value: "15+", label: "Projects", sub: "Web, AI & Hardware" },
-  { value: "2", label: "Hackathons", sub: "NASA SpaceApps & Regional" },
+  { value: "2+", label: "Hackathons", sub: "NASA SpaceApps & MoES INCOIS" },
 ];
 
 export default function About() {
