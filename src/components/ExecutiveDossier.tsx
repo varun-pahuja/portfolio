@@ -207,23 +207,70 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
               </div>
             </div>
 
-            {/* Core Impact Metrics Bar */}
+            {/* Core Impact Metrics Bar with Prominent Project Labels */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {[
-                { label: "Gesture ML Accuracy", val: "94.2%", sub: "ESP32 BLE HID Inertial Mouse" },
-                { label: "CRDT Sync Latency", val: "<12ms", sub: "Distributed Zero-Conflict State" },
-                { label: "Subsurface Ocean Depths", val: "15 Layers", sub: "MoES/INCOIS Deep Learning" },
-                { label: "LLM Token Savings", val: "Up to 90%", sub: "webcmd DOM Tree Caching" },
+                {
+                  project: "Air Mouse AI",
+                  val: "94.2%",
+                  label: "Gesture ML Accuracy",
+                  sub: "ESP32 BLE HID Inertial Mouse",
+                  badgeClass: "bg-red-500/15 text-red-400 border-red-500/30",
+                  metricClass: "text-[var(--accent-vermillion)]",
+                },
+                {
+                  project: "SyncDoc",
+                  val: "<12ms",
+                  label: "CRDT Sync Latency",
+                  sub: "Distributed Zero-Conflict State",
+                  badgeClass: "bg-blue-500/15 text-blue-400 border-blue-500/30",
+                  metricClass: "text-[#60a5fa]",
+                },
+                {
+                  project: "OceanEmbed",
+                  val: "15 Layers",
+                  label: "Subsurface Ocean Depths",
+                  sub: "MoES/INCOIS Deep Learning",
+                  badgeClass: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30",
+                  metricClass: "text-[#2dd4a8]",
+                },
+                {
+                  project: "webcmd",
+                  val: "Up to 90%",
+                  label: "LLM Token Savings",
+                  sub: "DOM Tree Caching & Compression",
+                  badgeClass: "bg-amber-500/15 text-amber-400 border-amber-500/30",
+                  metricClass: "text-[#c9a84c]",
+                },
               ].map((m) => (
                 <div
-                  key={m.label}
-                  className="p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.02)] space-y-0.5"
+                  key={m.project}
+                  className="p-3 sm:p-3.5 rounded-xl border border-[var(--border-subtle)] bg-[rgba(255,255,255,0.025)] hover:border-[var(--accent-vermillion)]/30 transition-all flex flex-col justify-between"
                 >
-                  <div className="text-xl font-bold font-mono text-[var(--accent-vermillion)]">
-                    {m.val}
+                  <div className="space-y-1">
+                    {/* Prominent Project Name Badge */}
+                    <div className="flex items-center justify-between">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-bold border tracking-tight ${m.badgeClass}`}>
+                        <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                        {m.project}
+                      </span>
+                    </div>
+
+                    {/* Metric Value */}
+                    <div className={`text-xl sm:text-2xl font-bold font-mono tracking-tight pt-1 ${m.metricClass}`}>
+                      {m.val}
+                    </div>
+
+                    {/* Metric Label */}
+                    <div className="text-xs font-semibold text-[var(--text-washi)] leading-tight">
+                      {m.label}
+                    </div>
                   </div>
-                  <div className="text-xs font-semibold text-[var(--text-washi)]">{m.label}</div>
-                  <div className="text-[10px] text-[var(--text-stone)] font-mono truncate">{m.sub}</div>
+
+                  {/* Subtext description */}
+                  <div className="text-[10px] text-[var(--text-stone)] font-mono truncate mt-2.5 pt-1.5 border-t border-[var(--border-subtle)]/60">
+                    {m.sub}
+                  </div>
                 </div>
               ))}
             </div>

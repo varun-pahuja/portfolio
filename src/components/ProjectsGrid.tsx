@@ -254,20 +254,20 @@ export default function ProjectsGrid() {
 
               {/* Interactive Live CRDT Simulator */}
               <div className="rounded-lg border border-[var(--border-dim)] bg-[rgba(6,6,10,0.85)] p-4 md:p-5 mb-6">
-                <div className="flex items-center justify-between mb-3 text-xs font-[family-name:var(--font-geist-mono)]">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center gap-1.5 text-xs text-[#c9a84c]">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-3 text-xs font-[family-name:var(--font-geist-mono)]">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-[#c9a84c] whitespace-nowrap">
                       <span className="w-2 h-2 rounded-full bg-[#c9a84c] animate-ping" />
                       Node A [Tokyo]
                     </span>
                     <span className="text-[var(--text-stone)]">⇄</span>
-                    <span className="inline-flex items-center gap-1.5 text-xs text-[#60a5fa]">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-[#60a5fa] whitespace-nowrap">
                       <span className="w-2 h-2 rounded-full bg-[#60a5fa]" />
                       Node B [Berlin]
                     </span>
                   </div>
-                  <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/60 flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3" /> 0 Merge Conflicts
+                  <span className="text-[10px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/60 flex items-center gap-1 whitespace-nowrap shrink-0">
+                    <CheckCircle2 className="w-3 h-3 shrink-0" /> 0 Merge Conflicts
                   </span>
                 </div>
 
@@ -750,19 +750,19 @@ export default function ProjectsGrid() {
 
               {/* Right Interactive Platform Switcher */}
               <div className="lg:col-span-7 bg-[rgba(6,6,10,0.85)] border border-[var(--border-dim)] rounded-xl p-5 md:p-6">
-                <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-3 mb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[var(--border-subtle)] pb-3 mb-4">
                   <span className="text-xs font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)] uppercase tracking-wider flex items-center gap-2">
                     <Share2 className="w-3.5 h-3.5 text-[var(--accent-vermillion)]" />
                     Live Output Morphing
                   </span>
 
                   {/* Platform Pills */}
-                  <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[var(--bg-ink)] border border-[var(--border-subtle)]">
+                  <div className="flex items-center gap-1.5 p-1 rounded-lg bg-[var(--bg-ink)] border border-[var(--border-subtle)] overflow-x-auto no-scrollbar max-w-full">
                     {(["x", "linkedin", "instagram"] as const).map((p) => (
                       <button
                         key={p}
                         onClick={() => handlePlatformChange(p)}
-                        className={`px-3 py-1 text-xs font-[family-name:var(--font-geist-mono)] rounded transition-all cursor-pointer ${
+                        className={`px-3 py-1 text-xs font-[family-name:var(--font-geist-mono)] rounded transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                           platform === p
                             ? "bg-[var(--accent-vermillion)] text-black font-bold shadow-sm"
                             : "text-[var(--text-stone)] hover:text-[var(--text-washi)]"
