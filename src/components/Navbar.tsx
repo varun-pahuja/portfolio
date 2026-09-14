@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Volume2, VolumeX, Terminal as TerminalIcon, FileText } from "lucide-react";
+import { Volume2, VolumeX, Terminal as TerminalIcon, FileText, Zap } from "lucide-react";
 import { playSound, setSoundEnabled, getInitialSoundState } from "@/lib/audio";
 import ResumeModal from "./ResumeModal";
 
@@ -13,7 +13,13 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ];
 
-export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void }) {
+export default function Navbar({
+  onOpenTerminal,
+  onOpenExecutive,
+}: {
+  onOpenTerminal?: () => void;
+  onOpenExecutive?: () => void;
+}) {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -160,6 +166,23 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
             <span className="hidden sm:inline font-mono text-[10px] tracking-wider">CV</span>
           </button>
 
+          {/* Recruiter Fast-Track Trigger */}
+          <button
+            onClick={() => {
+              playSound("switch");
+              onOpenExecutive?.();
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--accent-gold)]/50 bg-[var(--accent-gold)]/10 text-xs text-[var(--accent-gold)] hover:bg-[var(--accent-gold)]/20 hover:border-[var(--accent-gold)] transition-all active:scale-95 cursor-pointer font-mono shadow-sm"
+            title="Recruiter Fast-Track Mode (Press 'E')"
+            aria-label="Open Recruiter Fast-Track"
+          >
+            <Zap className="w-3.5 h-3.5 fill-[var(--accent-gold)] text-[var(--accent-gold)] animate-pulse" />
+            <span className="font-bold tracking-wider">EXEC</span>
+            <span className="hidden xl:inline text-[9px] px-1 rounded bg-[var(--accent-gold)]/20 text-[var(--accent-gold)]">
+              E
+            </span>
+          </button>
+
           {/* Status badge */}
           <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-dim)] bg-[var(--bg-lacquer)]/50">
             <span className="relative flex h-2 w-2">
@@ -233,6 +256,17 @@ export default function Navbar({ onOpenTerminal }: { onOpenTerminal?: () => void
               >
                 <FileText className="w-4 h-4" />
                 <span>View Resume / CV</span>
+              </button>
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  setMobileOpen(false);
+                  onOpenExecutive?.();
+                }}
+                className="py-3 text-lg font-medium text-[var(--accent-gold)] text-left flex items-center gap-2 border-b border-[var(--border-subtle)] font-mono"
+              >
+                <Zap className="w-4 h-4" />
+                <span>Executive Dossier (Fast-Track)</span>
               </button>
               <div className="flex items-center gap-2 mt-4">
                 <span className="relative flex h-2 w-2">

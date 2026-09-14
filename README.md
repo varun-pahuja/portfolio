@@ -53,10 +53,13 @@ Engineered with **Next.js 16 (Turbopack)**, **React 19**, and **Three.js / React
   - **Gold (金)** — `#c9a84c`
   - **Sakura (桜)** — `#e879a8`
   - **Jade (翠)** — `#2dd4a8`
-- **🎮 Interactive Terminal Drawer:** Press <kbd>`</kbd> or <kbd>~</kbd> (or toggle via navigation) to summon an integrated terminal with commands like `whoami`, `skills`, `iot`, `projects`, `resume`, `bench`, `matrix`, `secrets`, `theme <id>`, `contact`, and `clear`.
-- **📐 Interactive Architecture Inspectors:** Deep-dive case study drawers for *Air Mouse AI* and *SyncDoc* showcasing hardware constraints, data pipelines, engineering trade-offs, and verified benchmarks.
+- **🎮 Interactive Terminal Drawer:** Press <kbd>`</kbd> or <kbd>~</kbd> (or toggle via navigation) to summon an integrated terminal with commands like `ask <query>`, `exec`, `whoami`, `skills`, `iot`, `projects`, `resume`, `bench`, `matrix`, `secrets`, `theme <id>`, `contact`, and `clear`.
+- **🤖 Tactical Terminal AI Copilot (`ask <query>`):** Zero-latency client-side semantic engine answering arbitrary recruiter and engineer questions regarding Varun's system architecture, sensor drift math, CRDT models, or career background.
+- **⚡ Recruiter Fast-Track / Executive Dossier:** Press <kbd>E</kbd> or trigger `EXEC` from the navbar/terminal for an instant 15-second high-signal engineering scan with 1-click email copy, verified metrics, and PDF CV download.
+- **📐 4-System Architecture Dossiers:** Interactive deep-dive case study drawers for *Air Mouse AI*, *SyncDoc*, *OceanEmbed*, and *webcmd* detailing hardware constraints, data flow pipelines, engineering trade-offs, and empirical benchmarks.
+- **🖼️ Dynamic OpenGraph Image Engine:** Prerendered 1200×630 cyberpunk card for high-conversion social previews on LinkedIn, Twitter, and messaging apps.
 - **📡 Real-Time GitHub Telemetry:** Live streaming ticker pulling verified public commit activity for `varun-pahuja` via the GitHub API.
-- **📄 Verified Resume Dossier:** Interactive CV modal accessible via the navbar `CV` trigger, hero CTA, or CLI `resume` command.
+- **📄 Verified Resume Dossier:** Interactive CV modal accessible via navbar `CV` trigger, hero CTA, or CLI `resume` command.
 - **📬 Direct Transmission Console:** Tactical client-side comms terminal with subject protocols, character telemetry, and audio packet dispatch.
 - **🔊 Procedural Web Audio SFX:** 100% synthetic sound design generated via the Web Audio API without audio assets (clicks, relays, terminal typing, switches, and boot tones).
 - **🕹️ Easter Eggs:**

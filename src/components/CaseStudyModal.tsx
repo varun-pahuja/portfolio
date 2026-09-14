@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { playSound } from "@/lib/audio";
 
-export type CaseStudyId = "airmouse" | "syncdoc";
+export type CaseStudyId = "airmouse" | "syncdoc" | "oceanembed" | "webcmd";
 
 interface CaseStudyData {
   id: CaseStudyId;
@@ -173,6 +173,148 @@ const CASE_STUDIES: Record<CaseStudyId, CaseStudyData> = {
     ],
     githubUrl: "https://github.com/varun-pahuja/infotact-project2",
   },
+  oceanembed: {
+    id: "oceanembed",
+    title: "OceanEmbed Deep Learning",
+    badge: "SATELLITE AI × CLIMATE TELEMETRY",
+    subtitle: "3D Subsurface Ocean Thermal Profiling across 15 Depths (MoES / INCOIS)",
+    overview:
+      "A deep-learning spatial reconstruction system developed for the Ministry of Earth Sciences (MoES) and INCOIS to forecast 3D vertical ocean temperature columns down to 1,000m depth exclusively from 2D satellite surface observations (SST, SSS, and Altimetry).",
+    constraints: [
+      {
+        label: "Vertical Stratification",
+        value: "15 Depth Tiers (0–1000m)",
+        detail: "Non-linear thermocline layer dynamics require stratified loss weighting to avoid over-smoothing shallow mixed layers.",
+      },
+      {
+        label: "Satellite Data Fusion",
+        value: "SST + SSS + Altimetry",
+        detail: "Ingests Copernicus & INCOIS satellite rasters over the North Indian Ocean with coastline land masking.",
+      },
+      {
+        label: "Ground Truth Telemetry",
+        value: "Argo Profiling Floats",
+        detail: "Validates against sparse physical Argo float vertical soundings using specialized spatial regularization.",
+      },
+      {
+        label: "Inference Latency",
+        value: "< 180ms / Grid Cell",
+        detail: "Optimized model allows high-resolution spatial prediction across 0.25° oceanic grids in real time.",
+      },
+    ],
+    pipeline: [
+      {
+        step: "01. Satellite Multi-Raster Ingestion",
+        desc: "Ingests gridded Sea Surface Temperature, Salinity, and Altimetry anomaly rasters over 0°N–30°N, 40°E–100°E.",
+        tech: "NetCDF4 / Xarray",
+      },
+      {
+        step: "02. ViT + 3D-CNN Feature Fusion",
+        desc: "Vision Transformer spatial patch attention captures mesoscale eddy dipole correlations while CNN extracts coastal upwelling.",
+        tech: "PyTorch ViT",
+      },
+      {
+        step: "03. Vertical Thermocline Projection",
+        desc: "Decodes high-dimensional spatial embeddings into 15 continuous depth temperature estimates.",
+        tech: "Physics-Informed Loss",
+      },
+      {
+        step: "04. INCOIS Telemetry Validation",
+        desc: "Evaluates predicted thermal profiles against real physical Argo profiling floats deployed across the Indian Ocean.",
+        tech: "RMSE / MAE Scoring",
+      },
+    ],
+    tradeoffs: [
+      {
+        choice: "Hybrid ViT + CNN vs Pure 3D CNN",
+        why: "Captures both localized coastal upwelling (via CNN convolutions) and basin-wide dipole oscillations (via ViT self-attention).",
+        alternative: "Pure CNN lost long-distance oceanic teleconnections across the Bay of Bengal.",
+      },
+      {
+        choice: "Stratified Depth Weighting vs Uniform MSE",
+        why: "Heavily penalizes errors inside the thermocline (100m–300m) where the vertical temperature drop is steepest.",
+        alternative: "Uniform MSE achieved deceivingly low numerical error by prioritizing quiescent deep-water layers.",
+      },
+    ],
+    benchmarks: [
+      { metric: "RMSE (0–200m)", result: "0.68", unit: "°C" },
+      { metric: "RMSE (200–1000m)", result: "0.34", unit: "°C" },
+      { metric: "Monitored Depths", result: "15", unit: "Tiers" },
+      { metric: "Validation Floats", result: "1,200+", unit: "Argo Points" },
+    ],
+    githubUrl: "https://github.com/varun-pahuja/SIHPS66",
+  },
+  webcmd: {
+    id: "webcmd",
+    title: "webcmd Agent Browser Engine",
+    badge: "AGENT INFRASTRUCTURE × DOM COMPRESSION",
+    subtitle: "Self-Learning Headless Browser Caching Sashing LLM Token Costs by up to 90%",
+    overview:
+      "A high-performance browser execution layer built for autonomous AI agents that hashes DOM accessibility trees, strips redundant styling and layout wrappers, and caches immutable page structures to prevent repetitive LLM context re-ingestion.",
+    constraints: [
+      {
+        label: "Context Budget",
+        value: "Up to 90% Savings",
+        detail: "Standard web pages dump 25k–80k tokens of messy HTML into LLM context; webcmd prunes this down to <3k tokens.",
+      },
+      {
+        label: "Action Integrity",
+        value: "100% Target Retention",
+        detail: "Every interactive DOM target (buttons, inputs, dropdowns) retains clean ARIA accessibility identifiers.",
+      },
+      {
+        label: "Execution Latency",
+        value: "< 40ms AST Prune",
+        detail: "High-speed Tree Walker runs inside Node.js Playwright runtime without blocking page navigation.",
+      },
+      {
+        label: "DOM Mutation Tracking",
+        value: "Differential Hashes",
+        detail: "Only sends changed node diffs on dynamic single-page application (SPA) client re-renders.",
+      },
+    ],
+    pipeline: [
+      {
+        step: "01. Playwright CDP Ingestion",
+        desc: "Captures raw accessibility tree and interactive coordinate layout via Chrome DevTools Protocol.",
+        tech: "Playwright / CDP",
+      },
+      {
+        step: "02. AST Structural Pruning",
+        desc: "Recursively discards decorative containers (divs, svgs, styles) while retaining semantic interactive elements.",
+        tech: "Custom Tree Walker",
+      },
+      {
+        step: "03. Cryptographic DOM Hashing",
+        desc: "Generates hierarchical hashes per component branch to identify repeated page layouts.",
+        tech: "Branch AST Hashing",
+      },
+      {
+        step: "04. Agent Action Execution",
+        desc: "Translates LLM action outputs into synthetic user inputs with automated retry and assertion backoff.",
+        tech: "Action Dispatcher",
+      },
+    ],
+    tradeoffs: [
+      {
+        choice: "Accessibility Tree Hashing vs Raw HTML Minification",
+        why: "Accessibility tree contains only what users and assistants can actually interact with; HTML minification keeps useless layout cruft.",
+        alternative: "HTML minifiers only saved 18% tokens.",
+      },
+      {
+        choice: "Client-Side In-Memory Cache vs Remote Redis Cache",
+        why: "Zero network roundtrips during high-speed multi-step agent autonomous execution runs.",
+        alternative: "Centralized cache added 20ms network latency per DOM step.",
+      },
+    ],
+    benchmarks: [
+      { metric: "Token Reduction", result: "89.6", unit: "% Avg" },
+      { metric: "AST Prune Latency", result: "38.2", unit: "ms" },
+      { metric: "Selector Accuracy", result: "100", unit: "% Valid" },
+      { metric: "Test Scenarios", result: "500+", unit: "E2E Sites" },
+    ],
+    githubUrl: "https://github.com/varun-pahuja/webcmd",
+  },
 };
 
 interface CaseStudyModalProps {
@@ -182,10 +324,18 @@ interface CaseStudyModalProps {
 }
 
 export default function CaseStudyModal({ isOpen, studyId, onClose }: CaseStudyModalProps) {
+  const [selectedId, setSelectedId] = useState<CaseStudyId | null>(studyId);
   const [activeTab, setActiveTab] = useState<"pipeline" | "tradeoffs" | "benchmarks">("pipeline");
 
-  if (!isOpen || !studyId) return null;
-  const study = CASE_STUDIES[studyId];
+  useEffect(() => {
+    if (studyId) {
+      setSelectedId(studyId);
+    }
+  }, [studyId]);
+
+  if (!isOpen) return null;
+  const currentId = selectedId || studyId || "airmouse";
+  const study = CASE_STUDIES[currentId];
 
   return (
     <AnimatePresence>
@@ -198,22 +348,46 @@ export default function CaseStudyModal({ isOpen, studyId, onClose }: CaseStudyMo
           className="relative w-full max-w-3xl bg-[var(--bg-void)] border border-[var(--border-dim)] rounded-2xl shadow-2xl overflow-hidden text-left my-8"
         >
           {/* Top Architectural Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between px-6 py-3.5 border-b border-[var(--border-subtle)] bg-[var(--bg-lacquer)]/60 gap-3">
             <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)]">
               <span className="w-2 h-2 rounded-full bg-[var(--accent-vermillion)] animate-pulse" />
               <span className="text-[var(--accent-vermillion)] font-bold">{study.badge}</span>
-              <span className="text-[var(--text-stone)]">// ARCHITECTURE INSPECTOR</span>
+              <span className="text-[var(--text-stone)]">// ARCHITECTURE DOSSIER</span>
             </div>
-            <button
-              onClick={() => {
-                playSound("switch");
-                onClose();
-              }}
-              className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer"
-              aria-label="Close Case Study"
-            >
-              <X className="w-4 h-4" />
-            </button>
+
+            {/* Quick System Switcher */}
+            <div className="flex items-center gap-1.5 overflow-x-auto">
+              {(["airmouse", "syncdoc", "oceanembed", "webcmd"] as const).map((id) => (
+                <button
+                  key={id}
+                  onClick={() => {
+                    playSound("click");
+                    setSelectedId(id);
+                  }}
+                  className={`px-2.5 py-1 rounded text-[10px] font-mono uppercase tracking-wider transition-all cursor-pointer whitespace-nowrap ${
+                    currentId === id
+                      ? "bg-[var(--accent-vermillion)] text-black font-bold shadow-sm"
+                      : "text-[var(--text-stone)] hover:text-[var(--text-washi)] bg-white/[0.03] border border-[var(--border-subtle)]"
+                  }`}
+                >
+                  {id === "airmouse" && "Air Mouse"}
+                  {id === "syncdoc" && "SyncDoc"}
+                  {id === "oceanembed" && "OceanEmbed"}
+                  {id === "webcmd" && "webcmd"}
+                </button>
+              ))}
+
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  onClose();
+                }}
+                className="p-1.5 rounded-lg border border-[var(--border-subtle)] text-[var(--text-stone)] hover:text-[var(--text-washi)] hover:bg-white/[0.05] transition-all cursor-pointer ml-1"
+                aria-label="Close Case Study"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           <div className="p-6 md:p-8 space-y-6 max-h-[80vh] overflow-y-auto">

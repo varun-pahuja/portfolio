@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Terminal as TerminalIcon, X, Minimize2, Cpu, Wifi } from "lucide-react";
 import { useTheme, ThemeId, themes } from "@/lib/themes";
 import { playSound } from "@/lib/audio";
+import { queryCopilot } from "@/lib/terminalCopilot";
 
 type HistoryItem = {
   id: string;
@@ -69,9 +70,11 @@ function MatrixRain() {
 export default function TerminalDrawer({
   isOpen,
   onClose,
+  onOpenExecutive,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  onOpenExecutive?: () => void;
 }) {
   const { theme, setTheme } = useTheme();
   const [inputVal, setInputVal] = useState("");
@@ -138,6 +141,14 @@ export default function TerminalDrawer({
           output = (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-xs py-1">
               <div>
+                <span className="text-[var(--accent)] font-mono font-bold">ask &lt;query&gt;</span>
+                <span className="text-[var(--text-stone)]"> - AI Copilot Q&amp;A about Varun</span>
+              </div>
+              <div>
+                <span className="text-[var(--accent)] font-mono font-bold">exec</span>
+                <span className="text-[var(--text-stone)]"> - Recruiter Fast-Track Dossier</span>
+              </div>
+              <div>
                 <span className="text-[var(--accent)] font-mono font-bold">whoami</span>
                 <span className="text-[var(--text-stone)]"> - Bio & engineering background</span>
               </div>
@@ -185,6 +196,67 @@ export default function TerminalDrawer({
                 <span className="text-[var(--accent)] font-mono font-bold">exit</span>
                 <span className="text-[var(--text-stone)]"> - Close this terminal drawer</span>
               </div>
+            </div>
+          );
+          break;
+
+        case "ask":
+        case "ai": {
+          const query = args.join(" ");
+          const result = queryCopilot(query);
+          output = (
+            <div className="space-y-2 p-2.5 rounded bg-[var(--bg-lacquer)] border border-[var(--border-subtle)] text-xs font-mono">
+              <div className="flex items-center justify-between text-[var(--accent)] border-b border-[var(--border-subtle)] pb-1.5 font-bold">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  AI COPILOT // {result.topic.toUpperCase()}
+                </span>
+                <span className="text-[10px] text-[var(--accent-gold)]">
+                  CONFIDENCE: {(result.confidence * 100).toFixed(0)}%
+                </span>
+              </div>
+              <div className="space-y-1 text-[var(--text-parchment)] leading-relaxed">
+                {result.content.map((line, idx) => (
+                  <p
+                    key={idx}
+                    className={
+                      line.startsWith("[")
+                        ? "font-bold text-[var(--text-washi)]"
+                        : line.startsWith("•") || line.startsWith("  •")
+                        ? "text-[var(--text-parchment)]"
+                        : "text-[var(--text-stone)]"
+                    }
+                  >
+                    {line}
+                  </p>
+                ))}
+              </div>
+              {result.suggestedFollowUps && result.suggestedFollowUps.length > 0 && (
+                <div className="pt-2 border-t border-[var(--border-subtle)] text-[10px] text-[var(--text-stone)] flex flex-wrap gap-1.5 items-center">
+                  <span>Suggested queries:</span>
+                  {result.suggestedFollowUps.map((cmd) => (
+                    <button
+                      key={cmd}
+                      onClick={() => handleCommand(cmd)}
+                      className="px-2 py-0.5 rounded bg-white/[0.04] border border-[var(--border-dim)] text-[var(--accent-gold)] hover:bg-white/[0.1] hover:text-[var(--text-washi)] transition-all cursor-pointer"
+                    >
+                      &gt; {cmd}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+          break;
+        }
+
+        case "exec":
+        case "recruiter":
+        case "fasttrack":
+          onOpenExecutive?.();
+          output = (
+            <div className="text-xs text-emerald-400 font-mono p-2 rounded bg-[var(--bg-lacquer)] border border-emerald-500/30">
+              ⚡ Launching Recruiter Fast-Track Executive Dossier...
             </div>
           );
           break;

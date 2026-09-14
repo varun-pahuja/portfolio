@@ -17,25 +17,29 @@ const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: f
 const InkWashBackground = dynamic(() => import("@/components/InkWashBackground"), { ssr: false });
 const TerminalDrawer = dynamic(() => import("@/components/TerminalDrawer"), { ssr: false });
 const CockpitRail = dynamic(() => import("@/components/CockpitRail"), { ssr: false });
+const ExecutiveDossier = dynamic(() => import("@/components/ExecutiveDossier"), { ssr: false });
 
 export default function ClientShell() {
   const [terminalOpen, setTerminalOpen] = useState(false);
+  const [executiveOpen, setExecutiveOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement;
+      const isTyping =
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable);
+
       if (e.key === "`" || e.key === "~") {
-        const target = e.target as HTMLElement;
-        if (
-          target &&
-          (target.tagName === "INPUT" ||
-            target.tagName === "TEXTAREA" ||
-            target.isContentEditable)
-        ) {
-          // While typing in any input (including terminal prompt), do not intercept
-          return;
-        }
+        if (isTyping) return;
         e.preventDefault();
         setTerminalOpen((prev) => !prev);
+      } else if (e.key === "e" || e.key === "E") {
+        if (isTyping || terminalOpen) return;
+        e.preventDefault();
+        setExecutiveOpen((prev) => !prev);
       }
     };
 
@@ -59,8 +63,19 @@ export default function ClientShell() {
     <ThemeProvider>
       <ThemePicker />
       <InkWashBackground />
-      <TerminalDrawer isOpen={terminalOpen} onClose={() => setTerminalOpen(false)} />
-      <Navbar onOpenTerminal={() => setTerminalOpen(true)} />
+      <TerminalDrawer
+        isOpen={terminalOpen}
+        onClose={() => setTerminalOpen(false)}
+        onOpenExecutive={() => setExecutiveOpen(true)}
+      />
+      <Navbar
+        onOpenTerminal={() => setTerminalOpen(true)}
+        onOpenExecutive={() => setExecutiveOpen(true)}
+      />
+      <ExecutiveDossier
+        isOpen={executiveOpen}
+        onClose={() => setExecutiveOpen(false)}
+      />
       <main id="main-content" className="relative z-10">
         <Hero />
         <About />

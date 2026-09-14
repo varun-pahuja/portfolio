@@ -15,7 +15,7 @@ import {
   Bot,
 } from "lucide-react";
 import { playSound } from "@/lib/audio";
-import CaseStudyModal from "./CaseStudyModal";
+import CaseStudyModal, { CaseStudyId } from "./CaseStudyModal";
 
 function GithubIcon({ className }: { className?: string }) {
   return (
@@ -127,7 +127,7 @@ export default function ProjectsGrid() {
 
   // Interactive State: SyncDoc CRDT
   const [crdtStep, setCrdtStep] = useState(0);
-  const [crdtModalOpen, setCrdtModalOpen] = useState(false);
+  const [activeStudy, setActiveStudy] = useState<CaseStudyId | null>(null);
 
   // Interactive State: NASA RAG
   const [selectedNasaIdx, setSelectedNasaIdx] = useState(0);
@@ -332,7 +332,7 @@ export default function ProjectsGrid() {
               <button
                 onClick={() => {
                   playSound("switch");
-                  setCrdtModalOpen(true);
+                  setActiveStudy("syncdoc");
                 }}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent-vermillion)] hover:underline cursor-pointer"
               >
@@ -545,7 +545,7 @@ export default function ProjectsGrid() {
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
               <a
                 href="https://github.com/varun-pahuja/SIHPS66"
                 target="_blank"
@@ -554,8 +554,18 @@ export default function ProjectsGrid() {
                 className="inline-flex items-center gap-2 text-xs font-semibold text-[var(--text-washi)] hover:text-cyan-400 transition-colors"
               >
                 <GithubIcon className="w-4 h-4" />
-                Inspect Model Architecture
+                Inspect Repository
               </a>
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  setActiveStudy("oceanembed");
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-400 hover:underline cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                Inspect AI Architecture
+              </button>
             </div>
           </motion.article>
 
@@ -652,7 +662,7 @@ export default function ProjectsGrid() {
             </div>
 
             {/* Action Bar */}
-            <div className="flex items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-[var(--border-subtle)]">
               <a
                 href="https://github.com/varun-pahuja/webcmd"
                 target="_blank"
@@ -663,6 +673,16 @@ export default function ProjectsGrid() {
                 <GithubIcon className="w-4 h-4" />
                 Inspect webcmd Engine
               </a>
+              <button
+                onClick={() => {
+                  playSound("switch");
+                  setActiveStudy("webcmd");
+                }}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-violet-400 hover:underline cursor-pointer"
+              >
+                <Layers className="w-3.5 h-3.5" />
+                Inspect DOM Architecture
+              </button>
             </div>
           </motion.article>
 
@@ -782,9 +802,9 @@ export default function ProjectsGrid() {
       </div>
 
       <CaseStudyModal
-        isOpen={crdtModalOpen}
-        studyId="syncdoc"
-        onClose={() => setCrdtModalOpen(false)}
+        isOpen={activeStudy !== null}
+        studyId={activeStudy}
+        onClose={() => setActiveStudy(null)}
       />
     </section>
   );

@@ -23,6 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://varun-pahuja.github.io/portfolio"),
   title: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
   description:
     "I build systems where web meets hardware. Full-stack developer and IoT engineer specializing in React, Next.js, Node.js, and embedded systems.",
