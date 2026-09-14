@@ -40,6 +40,18 @@ export default function ClientShell() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
+
+    // Easter Egg DevTools Console Diagnostics Greeting
+    console.log(
+      "%c⛩️ VARUN PAHUJA // SYSTEM PROTOCOL\n" +
+      "%cLooking under the hood? Here are the hidden Easter eggs:\n" +
+      "  • Keyboard: ↑ ↑ ↓ ↓ ← → ← → B A  (Konami Code)\n" +
+      "  • Footer: Click '道 — the way' for Yin-Yang particle dissolve\n" +
+      "  • Terminal: Press ` (backtick) or type 'secrets'",
+      "color: #dc3545; font-size: 13px; font-weight: bold; font-family: monospace;",
+      "color: #a1a1aa; font-size: 11px; font-family: monospace;"
+    );
+
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 

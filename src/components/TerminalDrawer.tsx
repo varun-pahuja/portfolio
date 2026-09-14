@@ -100,6 +100,10 @@ export default function TerminalDrawer({
                 <span className="text-[var(--text-stone)]"> - Key engineering builds</span>
               </div>
               <div>
+                <span className="text-[var(--accent)] font-mono font-bold">secrets</span>
+                <span className="text-[var(--text-stone)]"> - Hidden portfolio Easter eggs</span>
+              </div>
+              <div>
                 <span className="text-[var(--accent)] font-mono font-bold">theme &lt;id&gt;</span>
                 <span className="text-[var(--text-stone)]"> - Switch palette (vermillion, indigo, gold, sakura, jade)</span>
               </div>
@@ -223,6 +227,27 @@ export default function TerminalDrawer({
               <p>• Email: <span className="text-[var(--text-parchment)]">varunpahuja2005@gmail.com</span></p>
               <p>• GitHub: <a href="https://github.com/varunpahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] underline">github.com/varunpahuja</a></p>
               <p>• LinkedIn: <a href="https://linkedin.com/in/varun-pahuja" target="_blank" rel="noopener noreferrer" className="text-[var(--accent)] underline">linkedin.com/in/varun-pahuja</a></p>
+            </div>
+          );
+          break;
+
+        case "secrets":
+          output = (
+            <div className="text-xs space-y-1.5 p-2.5 rounded bg-[var(--bg-lacquer)] border border-[var(--border-subtle)] text-[var(--text-parchment)]">
+              <p className="font-bold text-[var(--accent)] font-mono flex items-center gap-1.5">
+                <span>[HIDDEN PROTOCOLS // 2 SECRETS DETECTED]</span>
+              </p>
+              <p className="leading-relaxed">
+                <span className="text-[var(--text-washi)] font-semibold font-mono">1. Konami Code:</span> Type{" "}
+                <kbd className="px-1.5 py-0.5 rounded bg-black/50 border border-[var(--border-dim)] text-[var(--accent)] font-mono text-[10px]">
+                  ↑ ↑ ↓ ↓ ← → ← → B A
+                </kbd>{" "}
+                anywhere on the site (or click the footer pill) for the cyberpunk grand opening.
+              </p>
+              <p className="leading-relaxed">
+                <span className="text-[var(--text-washi)] font-semibold font-mono">2. Taijitu Dissolve:</span> Click{" "}
+                <span className="text-[var(--accent)] font-bold">道 — the way</span> in the footer for the Yin-Yang particle dispersion.
+              </p>
             </div>
           );
           break;

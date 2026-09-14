@@ -241,26 +241,46 @@ function KonamiOpening({ onDone }: { onDone: () => void }) {
 }
 
 /* ─────────────────────── Main Easter Egg Manager ─────────────────────── */
+const KEY_LABELS = ["↑", "↑", "↓", "↓", "←", "→", "←", "→", "B", "A"];
+
 export default function EasterEggs() {
   const [yyActive, setYyActive] = useState(false);
   const [konamiActive, setKonamiActive] = useState(false);
-  const konamiRef = useRef<number[]>([]);
+  const [matchedIndex, setMatchedIndex] = useState(0);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (window.matchMedia("(pointer: coarse)").matches) return; // no keyboard on touch
 
     const onKeyDown = (e: KeyboardEvent) => {
-      konamiRef.current.push(e.keyCode);
-      if (konamiRef.current.length > KONAMI_CODE.length) {
-        konamiRef.current.shift();
+      const target = e.target as HTMLElement;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        return;
       }
-      const match = KONAMI_CODE.every((k, i) => konamiRef.current[i] === k);
-      if (match) {
-        konamiRef.current = [];
-        playSound("terminal");
-        setKonamiActive(true);
-      }
+
+      setMatchedIndex((prev) => {
+        if (e.keyCode === KONAMI_CODE[prev]) {
+          const next = prev + 1;
+          playSound("beep");
+          if (next === KONAMI_CODE.length) {
+            playSound("terminal");
+            setKonamiActive(true);
+            return 0;
+          }
+          return next;
+        } else {
+          // If key matches the first step, start new sequence
+          if (e.keyCode === KONAMI_CODE[0]) {
+            playSound("beep");
+            return 1;
+          }
+          return 0;
+        }
+      });
     };
 
     window.addEventListener("keydown", onKeyDown);
@@ -270,6 +290,11 @@ export default function EasterEggs() {
   const handleTriggerYinYang = () => {
     playSound("relay");
     setYyActive(true);
+  };
+
+  const handleTriggerKonamiClick = () => {
+    playSound("terminal");
+    setKonamiActive(true);
   };
 
   return (
@@ -289,14 +314,46 @@ export default function EasterEggs() {
         )}
       </AnimatePresence>
 
-      {/* The 道 button in the footer — activates the yin-yang dissolve */}
-      <button
-        onClick={handleTriggerYinYang}
-        className="absolute bottom-4 right-6 md:right-8 z-40 text-[10px] text-[var(--text-stone)] hover:text-[var(--accent-vermillion)] transition-colors font-[family-name:var(--font-geist-mono)] tracking-wider cursor-pointer select-none py-1 px-2 rounded hover:bg-white/[0.04]"
-        aria-label="Easter egg: yin-yang dissolve animation"
-      >
-        道 — the way
-      </button>
+      {/* Interactive Footer Easter Egg Telemetry Controls */}
+      <div className="flex flex-wrap items-center justify-center sm:justify-end gap-2.5 z-40">
+        {/* Konami Code Live Keycap Pill */}
+        <button
+          onClick={handleTriggerKonamiClick}
+          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border-dim)] bg-[var(--bg-lacquer)]/70 text-xs font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)] hover:border-[var(--accent-vermillion)]/60 hover:text-[var(--text-washi)] transition-all cursor-pointer shadow-sm active:scale-95 select-none"
+          title="Press this sequence on your keyboard (or click) to trigger Easter Egg!"
+          aria-label="Konami code trigger and live key status"
+        >
+          <span className="text-[10px] uppercase tracking-wider text-[var(--accent-vermillion)] font-bold flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-vermillion)] animate-pulse" />
+            Konami
+          </span>
+          <div className="flex items-center gap-0.5">
+            {KEY_LABELS.map((k, i) => (
+              <kbd
+                key={i}
+                className={`px-1.5 py-0.5 rounded text-[10px] font-mono leading-none transition-all ${
+                  i < matchedIndex
+                    ? "bg-[var(--accent-vermillion)] text-black font-bold shadow-[0_0_8px_rgba(var(--accent-rgb),0.7)] scale-110"
+                    : "bg-black/40 border border-[var(--border-subtle)] text-[var(--text-stone)] group-hover:text-[var(--text-parchment)]"
+                }`}
+              >
+                {k}
+              </kbd>
+            ))}
+          </div>
+        </button>
+
+        {/* Yin-Yang Dissolve Button */}
+        <button
+          onClick={handleTriggerYinYang}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--border-dim)] bg-[var(--bg-lacquer)]/70 text-xs font-[family-name:var(--font-geist-mono)] text-[var(--text-stone)] hover:border-[var(--accent-vermillion)]/60 hover:text-[var(--accent-vermillion)] transition-all cursor-pointer shadow-sm active:scale-95 select-none"
+          title="Click to trigger Yin-Yang particle dissolve"
+          aria-label="Easter egg: yin-yang dissolve animation"
+        >
+          <span className="text-xs text-[var(--accent-gold)] animate-spin-slow">☯</span>
+          <span className="text-[10px] tracking-wider uppercase font-medium">道 — the way</span>
+        </button>
+      </div>
     </>
   );
 }
