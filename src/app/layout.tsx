@@ -42,6 +42,17 @@ export const metadata: Metadata = {
     title: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
     description:
       "I build systems where web meets hardware. Full-stack developer and IoT engineer.",
+    url: "https://varun-pahuja.github.io/portfolio",
+    siteName: "Varun Pahuja Portfolio",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
+        type: "image/png",
+      },
+    ],
     type: "website",
     locale: "en_US",
   },
@@ -50,6 +61,7 @@ export const metadata: Metadata = {
     title: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
     description:
       "I build systems where web meets hardware. Full-stack developer and IoT engineer.",
+    images: ["/og-image.png"],
   },
   robots: { index: true, follow: true },
 };
