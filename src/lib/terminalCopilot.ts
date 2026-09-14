@@ -206,7 +206,7 @@ const KNOWLEDGE_BASE: KnowledgeNode[] = [
         "• Phone / WhatsApp: +91 7415710476",
         "• GitHub: https://github.com/varun-pahuja",
         "• LinkedIn: https://linkedin.com/in/varun-pahuja",
-        "• Portfolio: https://varun-pahuja.github.io/portfolio",
+        "• Portfolio: https://varunpahuja04.vercel.app",
       ],
       followUps: ["ask resume", "ask projects"],
     }),

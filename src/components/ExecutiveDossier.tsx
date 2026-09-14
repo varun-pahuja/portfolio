@@ -367,7 +367,7 @@ export default function ExecutiveDossier({ isOpen, onClose }: ExecutiveDossierPr
             {/* Print-only footer */}
             <div className="hidden print:flex items-center justify-between pt-3 border-t border-gray-300 text-[10px] font-mono text-gray-700">
               <span>Varun Pahuja • varunpahuja2005@gmail.com • +91 7415710476</span>
-              <span>Generated from varun-pahuja.github.io/portfolio</span>
+              <span>Generated from varunpahuja04.vercel.app</span>
             </div>
 
             {/* Bottom Actions Footer (Screen only) */}

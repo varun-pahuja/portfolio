@@ -15,7 +15,7 @@
 
 A bespoke developer portfolio blending Japanese cyberpunk minimalism with tactile hardware telemetry, 3D WebGL scenes, interactive architectural micro-proofs, and a procedural synthesizer audio engine.
 
-[Live Demo](https://varun-pahuja.github.io/portfolio) • [Report Issue](https://github.com/varun-pahuja/portfolio/issues) • [Contact](mailto:varunpahuja2005@gmail.com)
+[Live Demo](https://varunpahuja04.vercel.app) • [Report Issue](https://github.com/varun-pahuja/portfolio/issues) • [Contact](mailto:varunpahuja2005@gmail.com)
 
 </div>
 

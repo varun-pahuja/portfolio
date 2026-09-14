@@ -32,7 +32,7 @@ const getBaseUrl = () => {
   if (process.env.NEXT_PUBLIC_SITE_URL) {
     return process.env.NEXT_PUBLIC_SITE_URL;
   }
-  return "https://varun-pahuja.github.io/portfolio";
+  return "https://varunpahuja04.vercel.app";
 };
 
 const baseUrl = getBaseUrl();
@@ -61,6 +61,13 @@ export const metadata: Metadata = {
     siteName: "Varun Pahuja Portfolio",
     images: [
       {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
+        type: "image/jpeg",
+      },
+      {
         url: "/og-image.png",
         width: 1200,
         height: 630,
@@ -76,7 +83,7 @@ export const metadata: Metadata = {
     title: "Varun Pahuja — Full-Stack Developer & IoT Engineer",
     description:
       "I build systems where web meets hardware. Full-stack developer and IoT engineer.",
-    images: ["/og-image.png"],
+    images: ["/og-image.jpg"],
   },
   robots: { index: true, follow: true },
 };
@@ -85,7 +92,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: "Varun Pahuja",
-  url: "https://varun-pahuja.github.io/portfolio",
+  url: "https://varunpahuja04.vercel.app",
   jobTitle: "Full-Stack Developer & IoT Engineer",
   alumniOf: {
     "@type": "CollegeOrUniversity",
